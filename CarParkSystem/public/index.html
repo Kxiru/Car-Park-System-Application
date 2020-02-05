@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Buy Ticket</title>
+    </head>
+
+    <body>
+        <h1>Please fill in the form below to gain access to the carpark.</h1>
+        <hr size="2">
+        <form method="POST" action="/post-feedback">
+            <label>Name:<input type="text" name="name" required></label><br>
+            <label>Ticket Type<select name="ticketType">
+                <option value="Employee">Employee</option>
+                <option value="Resident">Resident</option>
+                <option value="Customers">Customers</option>
+            </select></label><br>
+            <label>Ticket Price:<input type="number" name="ticketPrice" required></label><br>
+            <label>Time Expected to Stay:<input type="text" name="timeStayedHRs" required></label><br>
+            <input type="submit" value="Submit">
+        </form>
+        <a href="/view-feedback">View DataBase Entries</a>
+    </body>
+</html>
