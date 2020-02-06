@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+ 
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  font-family: 'Nunito', sans-serif;
+}
+ 
+body{
+  color: white;
+  background: url('cssbackground.png') no-repeat top center;
+  background-size: cover;
+  height: 100vh;
+}
+ 
+.subtitle{
+    font-size: 30px;
+}
+
+
+.wrapper{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  padding: 0 20px;
+}
+ 
+.contact-form{
+  display: flex;
+  max-width: 550px;
+  margin: 0 auto;
+  background: rgba(0,0,0,0.8);
+  padding: 30px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+ 
+.input-fields{
+  display: flex;
+  flex-direction: column;
+  margin-right: 4%;
+}
+ 
+.input-fields,
+.msg{
+  width: 48%;
+}
+ 
+.input-fields .input,
+ textarea{
+  margin: 10px 0;
+  background: transparent;
+  border: 0px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #c5ecfd;
+  padding: 10px;
+  color: #c5ecfd;
+  width: 100%;
+}
+ 
+ 
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: #c5ecfd;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #c5ecfd;
+}
+:-ms-input-placeholder {
+  /* IE 10+ */
+  color: #c5ecfd;
+}
+ 
+.btn {
+    background: #00b09b;
+    text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+ 
+@media screen and (max-width: 600px){
+  .contact-form{
+    flex-direction: column;
+  }
+  .msg textarea{
+    height: 80px;
+  }
+  .input-fields,
+  .msg{
+    width: 100%;
+  }
+}
