@@ -42,7 +42,7 @@ def AddItem(Database, Table, ticket):
         print("Could not do operation of adding ticket.")
 
 
-Database = my_client.CarParkDatabase
+Database = my_client.test
 #info = Database.getCollectionInfos()
 #Database.showCollections()
 TicketTable = Database.TicketsTable
@@ -50,10 +50,10 @@ x = TicketTable.count()
 #t1 = Ticket(x + 1, "Donald T", "Customer", 3, 1, "02.01.2019", "16:00", "17:00")
 #t2 = Ticket(x + 2, "Adam G.", "Customer", 2.5, 3, "05.04.2019", "10:00", "13:00")
 #t3 = Ticket(x + 3, "Otis H.", "Customer", 3, 1.5, "19.08.2018", "14:00", "15:30")
-t4 = Ticket(x + 1, "Hillary C.", "Resident", 10, 20, "20.02.2018", "06:00", "16:00")
+#t4 = Ticket(x + 1, "Hillary C.", "Resident", 10, 20, "20.02.2018", "06:00", "16:00")
 #AddItem(Database, TicketTable, t1)
 #AddItem(Database, TicketTable, t2)
 #AddItem(Database, TicketTable, t3)
-AddItem(Database, TicketTable, t4)
+#AddItem(Database, TicketTable, t4)
 GetAllItems(Database, TicketTable)
 
