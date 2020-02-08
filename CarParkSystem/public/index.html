@@ -1,62 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <title>Buy Ticket</title>
-        <link rel="stylesheet" type= "text/css" href="css/style.css">
-        <link rel="stylesheet" type= "styles/css" href="css/style.css">
+        <link rel="stylesheet" href="css/style.css">
     </head>
     
     <body>
-        <!-- <h1>CAR PARK FORM</h1>
-        <hr size="2">
-        <form method="POST" action="/post-feedback">
-            <!-- <label>Name:<input type="text" name="name" required></label><br>
-            <label>Ticket Type<select name="ticketType">
-                <option value="Employee">Employee</option>
-                <option value="Resident">Resident</option>
-                <option value="Customers">Customers</option>
-            </select></label><br>
-            <label>Ticket Price:<input type="number" name="ticketPrice" required></label><br>
-            <label>Time Expected to Stay:<input type="text" name="timeStayedHRs" required></label><br>
-            <input type="submit" value="Submit">
-            
-            Please fill in the form below to gain access to the carpark. <br>
-            <br> Name: <br> <input type="text" name="name" placeholder=""><br>
-            Ticket Type: <br> <select name="ticketType">
-                <option value="Employee">Employee</option>
-                <option value="Resident">Resident</option>
-                <option value="Customers">Customers</option>
-            </select><br>
-            Ticket Price: <br> <input type="text" name="ticketPrice" placeholder=""> <br>
-            Time Expected to Stay: <br> <input type="text" name="timeStayedHRs" placeholder=""><br>
-            <input type="submit" value="SUBMIT"><br>
-        </form>
-        <br> <a href="/view-feedback">View DataBase Entries</a>
-        -->
         
-        <div class="wrapper">
-          <div class="contact-form">
-            <form method="POST" action="/post-feedback">
-                <div class="subtitle">
-                    CAR PARK FILL FORM <br>
-                </div>
-                <div class="input-fields">
-                    <br>Please fill in the form below to gain access to the carpark. <br>
-                    <br> Name: <br> <input type="text" name="name"><br>
-                    Ticket Type: <br> <select name="ticketType">
-                        <option value="Employee">Employee</option>
-                        <option value="Resident">Resident</option>
-                        <option value="Customers">Customers</option>
-                    </select><br>
-                    Ticket Price: <br> <input type="text" name="ticketPrice"> <br>
-                    Time Expected to Stay: <br> <input type="text" name="timeStayedHRs"><br>
-                        
-                    <br> <div class="btn" onclick="javascript:document.forms[0].submit()">SUBMIT</div>
-                    <br> <a href="/view-feedback">View DataBase Entries</a>
-                </div>
-              </form>
-          </div>
+    <form class="box" action="/post-feedback" method="POST">
+        <h1>CAR PARK FILL FORM</h1>
+        <input type="button" class="button_active" value="GO BACK" onclick="location.href='landing.html';" />
+        <br>Please fill in the form below to gain access to the carpark. <br>
+        
+        <br> Name:
+        <input type="text" name="name">
+        <br> Ticket Type: <br>
+        <br>
+        <div class="dropdown" >
+            <select name="ticketType">
+                <option value="Employee">Employee</option>
+                <option value="Resident">Resident</option>
+                <option value="Customers">Customers</option>
+            </select>
         </div>
+        
+        <br> Ticket Price:
+        <input type="text" name="ticketPrice">
+        <br> Time Expected to Stay:
+        <input type="text" name="timeStayedHRs"> <br>
+        
+        <input type="submit" name="" value="SUBMIT">
+            
+        <div class="view-link">
+            <br> <a href="/view-feedback">View Database Entries</a> <br>
+        </div>
+    </form>
+    
     </body>
 </html>
