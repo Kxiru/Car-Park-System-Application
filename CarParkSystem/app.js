@@ -6,7 +6,7 @@ var mongodb = require('mongodb');
 
 var dbConn = mongodb.MongoClient.connect("mongodb://Admin:admin123@cs1813namedb-shard-00-00-maax9.mongodb.net:27017,cs1813namedb-shard-00-01-maax9.mongodb.net:27017,cs1813namedb-shard-00-02-maax9.mongodb.net:27017/test?ssl=true&replicaSet=CS1813NameDB-shard-0&authSource=admin&retryWrites=true&w=majority/CarParkDatabase");
 if (dbConn) {
-    console.log("Connected successfully to server");
+    console.log("Successfully connected to server");
 }
 
 var app = express();

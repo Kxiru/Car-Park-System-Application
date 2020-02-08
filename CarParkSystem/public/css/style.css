@@ -12,7 +12,7 @@ body {
 
 .menu-box {
     width: 300px;
-    padding 50px;
+    /*padding 50px;*/
     position: absolute;
     top: 50%;
     left: 50%;
@@ -20,12 +20,34 @@ body {
     background: rgba(0,0,0,0.8);
     border-radius: 24px;
     text-align: center;
+    box-sizing: border-box;
+    padding: 70px 30px;
 }
 
 .menu-box h1 {
     color: white;
     text-transform: uppercase;
     font-weight: 500;
+}
+
+.menu-box .mainicon {
+    width: 100px;
+    height: 100px:
+    position: absolute;
+    top: -50px;
+    left: calc(50% - 50px);
+    border: 2px solid #00c7a2;
+    border-radius: 50%;
+}
+
+.box .mainicon {
+    width: 100px;
+    height: 100px:
+    position: absolute;
+    top: -50px;
+    left: calc(50% - 50px);
+    border: 2px solid #00c7a2;
+    border-radius: 50%;
 }
 
 .box {
