@@ -12,7 +12,8 @@ if (dbConn) {
 var app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.resolve(__dirname, 'public')));
+// app.use(express.static(path.resolve(__dirname, 'public')));
+app.use(express.static(path.resolve(__dirname, 'public'),{index: 'landing.html'}));
 
 app.post('/post-feedback', function (req, res) {
     dbConn.then(function (db) {
