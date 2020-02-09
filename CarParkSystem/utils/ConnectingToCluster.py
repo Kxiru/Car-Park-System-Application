@@ -1,7 +1,7 @@
 import pymongo
 from datetime import datetime
 
-my_client = pymongo.MongoClient('mongodb+srv://Stefan:stefan123@cs1813namedb-maax9.mongodb.net/test?retryWrites=true&w=majority')
+my_client = pymongo.MongoClient('mongodb+srv://Admin:admin123@cs1813namedb-maax9.mongodb.net/test?retryWrites=true&w=majority')
 
 def TestMongoVersion():
     try:
