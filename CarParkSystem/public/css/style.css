@@ -32,8 +32,8 @@ body {
 
 .menu-box .mainicon {
     width: 100px;
-    height: 100px:
-    position: absolute;
+    height: 100px;
+    /* position: absolute; */
     top: -50px;
     left: calc(50% - 50px);
     border: 2px solid #00c7a2;
@@ -42,8 +42,8 @@ body {
 
 .box .mainicon {
     width: 100px;
-    height: 100px:
-    position: absolute;
+    height: 100px;
+    /* position: absolute; */
     top: -50px;
     left: calc(50% - 50px);
     border: 2px solid #00c7a2;
@@ -52,7 +52,7 @@ body {
 
 .box {
     width: 300px;
-    padding 50px;
+    /* padding 50px; */
     position: absolute;
     top: 50%;
     left: 50%;
@@ -76,7 +76,7 @@ body {
     margin: 10px auto;
     text-align: center;
     border: 2px solid #00c7a2;
-    padding 14px 10px;
+    /* padding 14px 10px; */
     width: 200px;
     outline: none;
     color: white;
@@ -127,7 +127,7 @@ body {
     font-size: 15px;
     text-align: center;
     border: 2px solid #00c7a2;
-    padding 14px 10px;
+    /* padding 14px 10px; */
     width: 160px;
     outline: none;
     color: white;
@@ -143,7 +143,7 @@ body {
     font-size: 15px;
     text-align: center;
     border: 2px solid #91bcc9;
-    padding 14px 10px;
+    /* padding 14px 10px; */
     width: 160px;
     outline: none;
     color: white;
@@ -169,7 +169,7 @@ body {
     font-size: 15px;
     text-align: center;
     border: 2px solid #00c7a2;
-    padding 14px 10px;
+    /* padding 14px 10px; */
     width: 160px;
     outline: none;
     color: white;
