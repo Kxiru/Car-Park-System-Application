@@ -32,28 +32,3 @@ app.get('/view-feedback', function (req, res) {
 });
 
 app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');
-
-
-
-
-
-
-
-
-
-
-// const MongoClient = require('mongodb').MongoClient;
-// const assert = require('assert');
-
-// MongoClient.connect("mongodb+srv://Keiru:keiru123@cs1813namedb-maax9.mongodb.net/test?retryWrites=true&w=majority", function (err, client) {
-//     assert.equal(null, err);
-//     console.log("Connected successfully to server");
-// });
-
-// MongoClient.connect("mongodb://Keiru:keiru123@cs1813namedb-shard-00-00-maax9.mongodb.net:27017,cs1813namedb-shard-00-01-maax9.mongodb.net:27017,cs1813namedb-shard-00-02-maax9.mongodb.net:27017/test?ssl=true&replicaSet=CS1813NameDB-shard-0&authSource=admin&retryWrites=true&w=majority/CarParkDatabase", function (err, db) {
-//     if (err) {
-//         throw err
-//     } else {
-//         console.log("Connected successfully to server");
-//     }
-// });
