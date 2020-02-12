@@ -1,3 +1,6 @@
+12/02/2020 Prototype code: 3900603b79bce83d85a6cb6174eeff0d598b7657
+In case you want to go back and view the code as it was during our first prototype presentation.
+
 07/02/2020 Edition-------------------------
 In order to run the localhost, make sure to pull the most recent changes from Git using the string below:
 
