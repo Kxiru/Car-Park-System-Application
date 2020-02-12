@@ -1,8 +1,3 @@
-- THIS IS THE PROTOTYPE BRANCH.
-- PLEASE DO NOT CHANGE ANYTHING ON THIS BRANCH. THIS BRANCH SHOULD NOT BE EDITED PAST 12/02/2020 (THE DATE OF OUR PROTOTYPE PRESENTATION).
-
-
-
 07/02/2020 Edition-------------------------
 In order to run the localhost, make sure to pull the most recent changes from Git using the string below:
 
