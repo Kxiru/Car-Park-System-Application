@@ -12,7 +12,7 @@ dbConn.then(() => {
 var app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.resolve(__dirname, 'public'),{index: 'LandingPage.html'}));
+app.use(express.static(path.resolve(__dirname, 'public'),{index: 'Homepage.html'}));
 
 
 
