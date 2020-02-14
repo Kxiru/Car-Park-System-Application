@@ -11,15 +11,22 @@ body {
 }
 
 .menu-box {
-    width: 300px;
+    min-width: 150px;
+    max-width: 300px;
+    
+    min-height: 20px;
+    max-height: 700px;
     /*padding 50px;*/
     position: absolute;
+    
+    margin: 0 auto;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(0,0,0,0.8);
     border-radius: 24px;
     text-align: center;
+    display: inline-block;
     box-sizing: border-box;
     padding: 70px 30px;
 }
@@ -51,7 +58,9 @@ body {
 }
 
 .box {
-    width: 300px;
+    min-width: 150px;
+    max-width: 300px;
+    
     /* padding 50px; */
     position: absolute;
     top: 50%;
@@ -66,6 +75,48 @@ body {
     color: white;
     text-transform: uppercase;
     font-weight: 500;
+}
+
+footer {
+    position: fixed;
+    margin-top: 15px;
+    min-width: 100%;
+    max-width: 100%;
+    height: 5% width: 100%;
+    text-align: center;
+    font-size: 1.2em;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.8);
+}
+
+#footer ul {
+  list-style-type: none;
+}
+#footer ul li {
+  display: inline;
+  margin: 0 15px;
+}
+
+.inner-footer {
+    width: 95%;
+    margin: auto;
+    padding: 30px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style: none;
+    color: #fff;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+ul a {
+    text-decoration: none;
+    outline: none;
+    color: #fff;
 }
 
 .box input[type = "text"], .box input[type = "password"] {
