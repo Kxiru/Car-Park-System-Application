@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<script type="text/javascript">
+    function showfield(name){
+        if(name=='Employee')document.getElementById("confirmationdiv").innerHTML='<br> Please input your Employee Discount code: <input type = "text" name="discountCode" />';
+        else document.getElementById("confirmationdiv").innerHTML='';
+    }
+
+</script>
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
@@ -18,17 +25,16 @@
         <input type="text" name="name">
         Ticket Type: <br>
         <div class="dropdown" >
-            <select name="ticketType">
+            <select name="ticketType" onchange="showfield(this.options[this.selectedIndex].value)">
+                <option value="Customer">Customer</option>
                 <option value="Employee">Employee</option>
                 <option value="Resident">Resident</option>
-                <option value="Customers">Customers</option>
             </select>
         </div>
-        
-        <br> Ticket Price:
-        <input type="text" name="ticketPrice">
-         Time Expected to Stay:
-        <input type="text" name="timeStayedHRs">
+        <div id="confirmationdiv"></div>
+        <br>
+         Time in:<br>
+        <input type="datetime-local" name="time">
         
         <input type="submit" name="" value="SUBMIT">
             

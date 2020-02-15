@@ -12,17 +12,23 @@ dbConn.then(() => {
 var app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.resolve(__dirname, 'public'),{index: 'Homepage.html'}));
-
-
+app.use(express.static(path.resolve(__dirname, 'public'), { index: 'Homepage.html' }));
 
 /////////// Form POST and GET requests////////////////////
 
-app.post('/post-feedback', function (req, res)
-{
-    dbConn.then(function (db)
-    {
-        delete req.body._id;
+
+app.post('/post-feedback', function (req, res) {
+    // This is the working previous code.
+    // dbConn.then(function (db) {
+    //     db.collection('TicketsTable').insertOne(req.body);
+    // });
+    // res.send('Data received:\n' + JSON.stringify(req.body));
+
+    dbConn.then(function (db) {
+
+        var count = db.collection('TicketsTable').count({});
+        req.body._id = Promise.resolve(count) + 1;
+        
         db.collection('TicketsTable').insertOne(req.body);
     });
     res.send('Data received:\n' + JSON.stringify(req.body));
@@ -38,22 +44,17 @@ app.get('/view-feedback', function (req, res) {
 
 /////////// Happy Hour POST and GET requests////////////////////
 
-app.post('/post-happyhour', function (req, res)
-{
-    dbConn.then(function (db)
-    {
+app.post('/post-happyhour', function (req, res) {
+    dbConn.then(function (db) {
         //delete req.body._id;
         db.collection('HappyHourTable').insertOne(req.body);
     });
     res.send('Happy-Hour received:\n' + JSON.stringify(req.body));
 
 });
-app.get('/view-hh', function (req, res)
-{
-    dbConn.then(function (db)
-    {
-        db.collection('HappyHourTable').find({}).toArray().then(function (feedbacks)
-        {
+app.get('/view-hh', function (req, res) {
+    dbConn.then(function (db) {
+        db.collection('HappyHourTable').find({}).toArray().then(function (feedbacks) {
             res.status(200).json(feedbacks);
         });
     });
@@ -61,10 +62,8 @@ app.get('/view-hh', function (req, res)
 
 /////////// Manager POST and GET requests////////////////////
 
-app.post('/post-manager', function (req, res)
-{
-    dbConn.then(function (db)
-    {
+app.post('/post-manager', function (req, res) {
+    dbConn.then(function (db) {
         //delete req.body._id;
         db.collection('ManagerTable').insertOne(req.body);
     });
