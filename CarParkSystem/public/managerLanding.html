@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Car Park Landing</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+<body>
+    
+    <div class="grid-container">
+        <div class="grid-title">
+            <h1> DASHBOARD </h1>
+        </div>
+        <div class="grid-header">Header</div>
+        <div class="grid-sidebar">
+            <form class="gs-box" action="/post-happyhour" method="POST">
+               <h1>  SET HAPPY HOUR </h1>
+               
+               Hours:
+               <input type="text" name="hours">
+               <input type="submit" name="" value="SUBMIT">
+               <br> <br>
+               <input type="button" class="button_active" value="GO BACK" onclick="location.href='Homepage.html';" />
+
+               <div class="view-link">
+                   
+                   <br> <a href="/view-hh">View Entries</a> <br>
+               </div>
+            </form>
+        </div>
+        <div class="grid-content">Content</div>
+        <div class="grid-footer">Footer</div>
+    </div>
+    <!-- <section class="content-area">
+        <div class="heading">
+            <h1>Manager</h1>
+            <p>Welcome to Car Park System</p>
+        </div>
+        
+       <div class="cards">
+            <div class="card col-md-4">
+                <div class="user-img"></div>
+                <span class="user-name">Manager Username</span>
+                <hr>
+                <div class="col-md-4">
+                    <span class="schools"> Test HS </span>
+                </div>
+            </div>
+            
+            <form class="card col-md-5" action="/post-happyhour" method="POST">
+               <h1> SET HAPPY HOUR </h1>
+
+               Hours:
+               <input type="text" name="hours">
+               <input type="submit" name="" value="SUBMIT">
+               <br> <br>
+               <input type="button" class="button_active" value="GO BACK" onclick="location.href='Homepage.html';" />
+
+               <div class="view-link">
+                   
+                   <br> <a href="/view-hh">View Entries</a> <br>
+               </div>
+            </form>
+        </div>
+        
+    </section>
+    -->
+</body>
+</html>
