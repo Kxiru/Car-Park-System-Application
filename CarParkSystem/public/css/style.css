@@ -128,8 +128,8 @@ html {
 }
 
 .box {
-    min-width: 200px;
-    max-width: 300px;
+    min-width: 300px;
+    max-width: 400px;
     
     min-height: 20px;
     max-height: 700px;
@@ -301,4 +301,24 @@ ul a {
 .menu-box input[type = "button"]:hover {
     width: 180px;
     background: rgba(0,199,163,0.7);
+}
+
+.box input[type = "button"], .grid-title input[type = "button"], .grid-content-b input[type = "button"], .grid-sidebar input[type = "button"] {
+    border: 0;
+    background: rgba(145,188,201,0.3);
+    display: block;
+    margin: 20px auto;
+    font-size: 15px;
+    text-align: center;
+    border: 2px solid #91bcc9;
+    width: 200px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.2s;
+}
+
+.box input[type = "button"]:hover, .grid-content-b input[type = "button"]:hover, .grid-title input[type = "button"]:hover {
+    width: 210px;
+    background: rgba(145,188,201,0.7);
 }
