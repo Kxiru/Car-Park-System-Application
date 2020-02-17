@@ -34,9 +34,12 @@ app.post('/post-feedback', function (req, res) {
     res.send('Data received:\n' + JSON.stringify(req.body));
 });
 
-app.get('/view-feedback', function (req, res) {
-    dbConn.then(function (db) {
-        db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+app.get('/view-feedback', function (req, res)
+{
+    dbConn.then(function (db)
+    {
+        db.collection('TicketsTable').find({}).toArray().then(function (feedbacks)
+        {
             res.status(200).json(feedbacks);
         });
     });
@@ -62,6 +65,16 @@ app.get('/view-hh', function (req, res) {
 
 /////////// Manager POST and GET requests////////////////////
 
+app.post('/view-managerCr', function (req, res) {
+    dbConn.then(function (db) {
+    console.log(req);
+        db.collection('ManagerTable').find({'Username': req.body.name, 'Password': req.body.password}).toArray().then(function (feedbacks) {
+            res.status(200).json(feedbacks);
+        });
+    });
+});
+
+
 app.post('/post-manager', function (req, res) {
     dbConn.then(function (db) {
         //delete req.body._id;
@@ -78,9 +91,5 @@ app.get('/view-manager', function (req, res) {
         });
     });
 });
-
-
-
-
 
 app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');
