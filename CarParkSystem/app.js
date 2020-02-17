@@ -66,10 +66,14 @@ app.get('/view-hh', function (req, res) {
 /////////// Manager POST and GET requests////////////////////
 
 app.post('/view-managerCr', function (req, res) {
-    dbConn.then(function (db) {
-    console.log(req);
+    dbConn.then(function (db)
+     {
+
         db.collection('ManagerTable').find({'Username': req.body.name, 'Password': req.body.password}).toArray().then(function (feedbacks) {
-            res.status(200).json(feedbacks);
+
+        if (feedbacks.length != 0) res.redirect('/managerLanding.html')
+        else res.redirect('managerlogin.html');
+
         });
     });
 });
