@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <script type="text/javascript">
-    function showfield(name){
-        if(name=='Employee')document.getElementById("confirmationdiv").innerHTML='<br> Please input your Employee Discount code: <input type = "text" name="discountCode" />';
-        else document.getElementById("confirmationdiv").innerHTML='';
+    function showfield(name) {
+        if (name == 'Employee') document.getElementById("confirmationdiv").innerHTML = '<br> Please input your Employee Discount code: <input type = "text" name="discountCode" />';
+        else document.getElementById("confirmationdiv").innerHTML = '';
     }
 
 </script>
 <html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <title>Buy Ticket</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="css/style.css">
-    </head>
-    
-    <body>
-        
+
+<head>
+    <meta charset="utf-8">
+    <title>Buy Ticket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
     <form class="box" action="/post-feedback" method="POST">
         <input type="button" class="button_active" value="GO BACK" onclick="location.href='ticketsPage.html';" />
         <img class="mainicon" src="css/images/ticketicon.png" alt="logo">
         <br>Please fill in the form below to gain access to the carpark<br>
-        
+
         <br> Name:
         <input type="text" name="name">
         Ticket Type: <br>
-        <div class="dropdown" >
+        <div class="dropdown">
             <select name="ticketType" onchange="showfield(this.options[this.selectedIndex].value)">
                 <option value="Customer">Customer</option>
                 <option value="Employee">Employee</option>
@@ -33,15 +34,16 @@
         </div>
         <div id="confirmationdiv"></div>
         <br>
-         Time in:<br>
+        Time in:<br>
         <input type="datetime-local" name="time">
-        
+
         <input type="submit" name="" value="SUBMIT">
-            
-        <div class="view-link">
-            <a href="/view-feedback">View Database Entries</a> <br>
-        </div>
+
     </form>
-    
-    </body>
+
+</body>
+<footer id="footer">
+    Group 8
+</footer>
+
 </html>

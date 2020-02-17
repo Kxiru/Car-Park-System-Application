@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Car Park Landing - Manager Page </title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="grid-container">
+        <div class="grid-title">
+            <input type="button" class="button_active" value="LOG OUT" onclick="location.href='Homepage.html';" />
+        </div>
+        <div class="grid-header">
+            <br>
+            <img class="dashboard-img" src="css/images/managericon.png" alt="logo">
+            <h3> WELCOME MANAGER </h3>
+
+        </div>
+        <div class="grid-sidebar">
+            <form class="gs-box" action="/post-happyhour" method="POST">
+                <br>
+                <img class="dashboard-img" src="css/images/happyhouricon.png" alt="logo">
+                <h3> SET HAPPY HOUR </h3>
+
+                Hours:
+                <input type="text" name="hours">
+                <input type="submit" name="" value="SUBMIT">
+                <br>
+            </form>
+        </div>
+
+        <div class="grid-content-a">
+            <br>
+            <img class="dashboard-img" src="css/images/reporticon.png" alt="logo">
+            <br>
+            <input type="button" name="" value="GET REPORT"> <br>
+        </div>
+        <div class="grid-content-b">
+            <br>
+            <img class="dashboard-img" src="css/images/charticon.png" alt="logo">
+            <br>
+
+            <input type="button"  value="VIEW TICKET ENTRIES" onclick="location.href='/view-feedback';" />
+            <br>
+            <input type="button"  value="VIEW MANAGERS" onclick="location.href='/view-manager';" />
+            <br>
+            <input type="button"  value="VIEW HAPPY HOUR LOG" onclick="location.href='/view-hh';" />
+            <br>
+
+        </div>
+        <br>
+    </div>
+
+    <footer id="footer">
+        Group 8
+    </footer>
+
+</body>
+
+</html>
