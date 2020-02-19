@@ -140,12 +140,24 @@ app.get('/view-tickets', function (req, res) {
 /////////// Happy Hour POST and GET requests////////////////////
 
 app.post('/post-happyhour', function (req, res) {
-    dbConn.then(function (db) {
-        //delete req.body._id;
-        db.collection('HappyHourTable').insertOne(req.body);
-    });
-    res.send(CSSStyling + "<form><h1>Happy Hour</h1>" + 'Happy-Hour received:\n' + JSON.stringify(req.body) + "<br><br>"+ backMLanding + "</form>");
+    (async () => {
+            let db = await dbConn;
+            let count = await db.collection('HappyHourTable').count();
+            req.body._id = count + 1;
+            //Set MillisecondTimeIn
+            req.body.timeSet = Date.now();
+            //Set FormattedTimeIn
+            req.body.formattedTimeSet = datetime;
+            console.log(req.body);
 
+            feedbackstring = CSSStyling + "<div class='box'><form>";
+            feedbackstring += "<br> Successfuly set happy hour for " + req.body.hours + " hours from now.";
+            feedbackstring += backHome + "</div></form>";
+
+            db.collection('HappyHourTable').insertOne(req.body);
+            res.send(feedbackstring);
+            //res.send('Data received:\n' + JSON.stringify(req.body));
+        })();
 });
 app.get('/view-hh', function (req, res) {
     dbConn.then(function (db) {
@@ -225,9 +237,9 @@ app.get('/view-customer', function (req, res)
                 };
             });
             let data = [customer, residence, employee];
-            //let labels = ["Customer", "Residence", "Employee"];
+            let labels = ["Customer", "Residence", "Employee"]
             res.status(200).json(data);
-            res.send(data);
+            res.send(data)
 
         });
         /*function renderChart(data, labels) {
