@@ -200,6 +200,7 @@ app.get('/view-manager', function (req, res) {
     });
 });
 
+<<<<<<< HEAD
 app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');
 
 /////////// Chart GET request and draw chart////////////////////
@@ -270,3 +271,6 @@ app.get('/myChart', function renderChart(data, labels) {
         renderChart(data, labels);
     }
 );*/
+=======
+app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');
+>>>>>>> 8b704b813e0244def568d487a951ef5639d0c1da
