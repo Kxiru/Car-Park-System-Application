@@ -200,4 +200,77 @@ app.get('/view-manager', function (req, res) {
     });
 });
 
+<<<<<<< HEAD
 app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');
+
+/////////// Chart GET request and draw chart////////////////////
+
+app.get('/view-customer', function (req, res)
+{
+    dbConn.then(function (db)
+    {
+        var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+            let customer= 0;
+            let residence = 0;
+            let employee = 0;
+
+            feedbacks.forEach(function (arrayItem) {
+                for (const [key, value] of Object.entries(arrayItem)){
+                    if (key == "ticketType"){
+                        if (value == "Customer"){
+                            customer += 1;
+                        } else if (value == "Residence"){
+                            residence +=1;
+                        }else if (value == "Employee"){
+                            employee +=1;
+                        }
+                    }
+                };
+            });
+            let data = [customer, residence, employee];
+            //let labels = ["Customer", "Residence", "Employee"];
+            res.status(200).json(data);
+            res.send(data);
+
+        });
+        /*function renderChart(data, labels) {
+                var ctx = document.getElementById("myChart").getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'This week',
+                            data: data,
+                        }]
+                    },
+                });
+            };*/
+    });
+});
+
+/*
+app.get('/myChart', function renderChart(data, labels) {
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'This week',
+                data: data,
+            }]
+        },
+    });
+})
+
+("#renderBtn").click(
+    function () {
+        data = [20000, 14000, 12000, 15000, 18000, 19000, 22000];
+        labels =  ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+        renderChart(data, labels);
+    }
+);*/
+=======
+app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');
+>>>>>>> 8b704b813e0244def568d487a951ef5639d0c1da
