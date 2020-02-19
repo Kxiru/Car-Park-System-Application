@@ -245,6 +245,22 @@ ul a {
     outline: none;
 }
 
+input[type = "number"] {
+    background: black;
+    color: #fff;
+    padding: 10px;
+    height: 10px;
+    width: 100px;
+    text-align: center;
+    border: 2px solid #00c7a2;
+    border-radius: 24px;
+    -webkit-border-radius: 24px;
+    font-size: 15px;
+    -webkit-appearance: button;
+    outline: none;
+}
+
+
 .box input[type = "submit"], .grid-sidebar input[type = "submit"] {
     border: 0;
     background: rgba(0,199,163,0.3);
