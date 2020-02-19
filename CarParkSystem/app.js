@@ -79,7 +79,7 @@ app.post('/verifyTicketID', function (req, res) {
     })();
 });
 
-app.post('/post-feedback', function (req, res) {
+app.post('/post-tickets', function (req, res) {
     (async () => {
         let db = await dbConn;
         let count = await db.collection('TicketsTable').count();
@@ -91,10 +91,14 @@ app.post('/post-feedback', function (req, res) {
         console.log(req.body);
 
         // alert("Your Ticket ID is: " + count);
+        feedbackstring = CSSStyling + "<div class='box'><form>";
+        feedbackstring += "<h3>" + req.body.name + ", your ticket has been generated successfully.</h3>Your ticket ID is: <b>" + req.body._id + "</b><br>";
+        feedbackstring += "<br> Please remember your Ticket ID for future reference.";
+        feedbackstring += backHome + "</div></form>";
 
         db.collection('TicketsTable').insertOne(req.body);
         //Rather than Have the user see their JSONified input, give them their Ticket ID.
-        res.send(req.body.name + ', your data was received successfully. Your ticket ID is:\n ' + req.body._id);
+        res.send(feedbackstring);
         //res.send('Data received:\n' + JSON.stringify(req.body));
     })();
 });
