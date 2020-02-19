@@ -152,7 +152,7 @@ app.post('/post-happyhour', function (req, res) {
 
             feedbackstring = CSSStyling + "<div class='box'><form>";
             feedbackstring += "<br> Successfuly set happy hour for " + req.body.hours + " hours from now.";
-            feedbackstring += backHome + "</div></form>";
+            feedbackstring += backMLanding + "</div></form>";
 
             db.collection('HappyHourTable').insertOne(req.body);
             res.send(feedbackstring);
