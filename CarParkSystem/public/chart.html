@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Report</title>
+        <link rel="stylesheet" href="css/style.css">
+        <script src= "https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src= '/view-customer'></script>
+    </head>
+    <body>
+      <div class ="chart-box" >
+        <canvas id="myChart" height="100" width="100"></canvas>
+      </div>
+
+      <script>
+        fetch('/view-customer').then(function(response){
+        return response.json();
+        }).then(function (data) {
+            console.log('MY ARRAY', data);
+
+        })
+
+          const data = [8, 0, 1];
+      console.log(Chart.defaults);
+
+
+      let myChart = document.getElementById('myChart').getContext('2d');
+        myChart.canvas.parentNode.style.height = '512px';
+        myChart.canvas.parentNode.style.width = '512px';
+
+
+        let newChart = new Chart(myChart, {
+          type: 'bar',
+          data:{
+            labels:["Customer", "Residence", "Employee"],
+            datasets:[{
+              label: 'Number of cars',
+              data: data,
+              backgroundColor: '#3a96f2',
+              hoverBorderWidth: 6,
+              hoverBorderColor: '#969696'
+            }]
+          },
+          options:{
+            title: {
+              display: true,
+              text: 'Automatic report',
+              fontSize: 20
+            },
+            scales:{
+              yAxes:[{
+                ticks:{
+                  beginAtZero:true
+                },
+
+                display: true,
+                labelString: 'Frequency'
+              }]
+            }
+
+
+          }
+        });
+
+      </script>
+
+    </body>
+</html>

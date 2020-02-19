@@ -1,0 +1,2 @@
+*.json
+CarParkSystem/node_modules/
