@@ -228,9 +228,9 @@ app.get('/view-customer', function (req, res)
                 };
             });
             let data = [customer, residence, employee];
-            //let labels = ["Customer", "Residence", "Employee"];
+            let labels = ["Customer", "Residence", "Employee"]
             res.status(200).json(data);
-            res.send(data);
+            res.send(data)
 
         });
         /*function renderChart(data, labels) {

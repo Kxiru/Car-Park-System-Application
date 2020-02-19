@@ -14,17 +14,15 @@
       </div>
 
       <script>
-        const datavalues= []
         fetch('/view-customer').then(function(response){
         return response.json();
         }).then(function (data) {
             console.log('MY ARRAY', data);
-            datavalues.push(data)
 
         })
 
-          //const datavalue = [8, 0, 1];
-      //console.log(Chart.defaults);
+          const data = [8, 0, 1];
+      console.log(Chart.defaults);
 
 
       let myChart = document.getElementById('myChart').getContext('2d');
@@ -38,7 +36,7 @@
             labels:["Customer", "Residence", "Employee"],
             datasets:[{
               label: 'Number of cars',
-              data: datavalues,
+              data: data,
               backgroundColor: '#3a96f2',
               hoverBorderWidth: 6,
               hoverBorderColor: '#969696'
