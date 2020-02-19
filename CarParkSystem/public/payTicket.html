@@ -8,11 +8,18 @@
 </head>
 
 <body>
-    <div class="menu-box">
+    <div class="box">
         <input type="button" class="button_active" value="GO BACK" onclick="location.href='ticketsPage.html';" />
+        <h3> Pay Ticket </h3>
         <img class="mainicon" src="css/images/landingicon.png" alt="logo">
-        <h1>Coming Soon</h1> <br>
-        <input type="button" class="button_active" value="Coming Soon" onclick="location.href='';" />
+        
+        <form action="/verifyTicketID" method="POST">
+            <label>TicketID</label>
+            <input type="number" name="TicketID">
+            <input type="submit" name="" class="button_active" value="Check Ticket">
+        </form>
+        
+
     </div>
 </body>
 <footer id="footer">
