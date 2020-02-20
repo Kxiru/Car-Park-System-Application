@@ -36,70 +36,107 @@ app.post('/verifyTicketID', function (req, res) {
 
         console.log("Passed ID: " + criteria);
         // db.collection('TicketsTable').find({ id: 3 }).toArray().then(function (feedbacks) {
-        db.collection('TicketsTable').find({ _id: parseInt(criteria) }).toArray().then(function (feedbacks) {
-            if (feedbacks.length != 0) {
+        db.collection('TicketsTable').find({ _id: parseInt(criteria) }).toArray().then(function (initialfeedbacks) {
+            if (initialfeedbacks.length != 0) {
                 // Updates the time out (milliseconds)
                 db.collection('TicketsTable').update(
                     { _id: parseInt(criteria) },
-                    { $set: { 'timeOut': Date.now() } }
+                    { $set: { 'timeOut': Date.now(), 'formattedTimeOut': datetime } }
                 );
 
-                //Formatting for receipt generation
-                receipt = CSSStyling + "<div class='box'><form>";
-                receipt += "<h2>Thank you for staying in the Car Park.</h2><br>"
-                receipt += feedbacks[0].name + ", Your ID is " + criteria + "<br>";
-                receipt += "You signed in at: " + feedbacks[0].formattedTimeIn + ". </br>You signed out at: " + datetime + (".");
+                db.collection('TicketsTable').find({ _id: parseInt(criteria) }).toArray().then(function (feedbacks) {
 
-                //Time spent in the CarPark calculation
-                const parkRate = 0.80;
-                const secondsSpentIn = (feedbacks[0].timeOut - feedbacks[0].timeIn) / 1000;
-                console.log(secondsSpentIn);
-                const hoursSpentIn = secondsSpentIn / 3600;
-                const stayPrice = (hoursSpentIn * parkRate).toFixed(2);
+                    //Time spent in the CarPark calculation
+                    const parkRate = 0.80;
+                    const secondsSpentIn = (feedbacks[0].timeOut - feedbacks[0].timeIn) / 1000;
+                    console.log(secondsSpentIn);
+                    const hoursSpentIn = secondsSpentIn / 3600;
+                    let stayPrice = (hoursSpentIn * parkRate).toFixed(2);
+                    const employeeDiscount = 0.7;
+                    
+                    receipt = CSSStyling + "<div class='box'><form>";
+                    receipt += "<h2>Thank you for staying in the Car Park.</h2>"
+                    receipt += feedbacks[0].name + ", Your ID is " + criteria + ".<br>";
 
-                //Receipt completion and payment...
-                receipt += "<br><hr><br> You spent " + hoursSpentIn.toFixed(2) + " hours in the car park.";
-                receipt += "<br> At a rate of £" + parkRate + " per hour, you have £" + stayPrice + " to pay.";
-                // pricelink = "<a href='http://www.paypal.me/nkeirukaw/" + stayPrice + "'>Click here to Pay Now</a>";
-                // pricelink = "<input type='button' value='Click here to Pay Now.' onclick='location.href='http://www.paypal.me/nkeirukaw/" + stayPrice + "''>"
-                // pricelink = "<button type='submit' formaction='http://www.paypal.me/nkeirukaw/" + stayPrice + "'>Click me</button>";
+                    if(feedbacks[0].ticketType == "Employee"){
 
-                pricelink = "<input type='submit' formaction='http://www.paypal.me/nkeirukaw/" + stayPrice + "' class='button_active' value='Click here to Pay Now'></input>";
-                receipt += "<br><hr>" + pricelink;
-                receipt += backHome;
-                receipt += "</div></form>";
-                res.send(receipt);
+                        receipt += "<br>As an Employee, please enjoy a 30% discount on your stay. You would have paid: £<b>" + stayPrice + "</b><br>";
+                        stayPrice = stayPrice * employeeDiscount;
+                    }
 
+                    //Formatting for receipt generation
+                    receipt += "<br>You signed in at: " + feedbacks[0].formattedTimeIn + ". </br>You signed out at: " + datetime + (".<br>");
+
+                    //Receipt completion and payment...
+                    receipt += "<br><hr>You spent " + hoursSpentIn.toFixed(2) + " hours in the car park.";
+                    receipt += "<br> At a rate of £" + parkRate + " per hour, you have £<b>" + stayPrice + "</b> to pay.";
+                    // pricelink = "<a href='http://www.paypal.me/nkeirukaw/" + stayPrice + "'>Click here to Pay Now</a>";
+                    // pricelink = "<input type='button' value='Click here to Pay Now.' onclick='location.href='http://www.paypal.me/nkeirukaw/" + stayPrice + "''>"
+                    // pricelink = "<button type='submit' formaction='http://www.paypal.me/nkeirukaw/" + stayPrice + "'>Click me</button>";
+
+                    pricelink = "<input type='submit' formaction='http://www.paypal.me/nkeirukaw/" + stayPrice + "' class='button_active' value='Click here to Pay Now'></input>";
+                    receipt += "<br><hr>" + pricelink;
+                    receipt += backHome;
+                    receipt += "</div></form>";
+                    res.send(receipt);
+
+                })
             }
             else {
-                res.send('That ticket ID could not be found.');
+                res.send(CSSStyling + '<div class="box"><form><br><h3>This ticket ID could not be found.</h3><br>Please check the ID and try again.' + backHome + "</form></div>");
             }
-
         });
     })();
 });
 
+async function addTicket(req,res) {
+    let db = await dbConn;
+    let count = await db.collection('TicketsTable').count();
+
+    req.body._id = count + 1;
+    //Set MillisecondTimeIn
+    req.body.timeIn = Date.now();
+    //Set FormattedTimeIn
+    req.body.formattedTimeIn = datetime;
+    console.log(req.body);
+
+    //alert("Your Ticket ID is: " + count);
+    feedbackstring = CSSStyling + "<div class='box'><form>";
+    feedbackstring += "<h3>" + req.body.name + ", your ticket has been generated successfully.</h3>Your ticket ID is: <b>" + req.body._id + "</b><br>";
+    feedbackstring += "<br> Please remember your Ticket ID for future reference.";
+    feedbackstring += backHome + "</div></form>";
+
+    db.collection('TicketsTable').insertOne(req.body);
+    //Rather than Have the user see their JSONified input, give them their Ticket ID.
+    res.send(feedbackstring);
+    //res.send('Data received:\n' + JSON.stringify(req.body));
+}
+
 app.post('/post-tickets', function (req, res) {
     (async () => {
+
         let db = await dbConn;
         let count = await db.collection('TicketsTable').count();
-        req.body._id = count + 1;
-        //Set MillisecondTimeIn
-        req.body.timeIn = Date.now();
-        //Set FormattedTimeIn
-        req.body.formattedTimeIn = datetime;
-        console.log(req.body);
 
-        // alert("Your Ticket ID is: " + count);
-        feedbackstring = CSSStyling + "<div class='box'><form>";
-        feedbackstring += "<h3>" + req.body.name + ", your ticket has been generated successfully.</h3>Your ticket ID is: <b>" + req.body._id + "</b><br>";
-        feedbackstring += "<br> Please remember your Ticket ID for future reference.";
-        feedbackstring += backHome + "</div></form>";
+        //Check for Employee and discount code
+        if (req.body.ticketType == "Employee") {
+            // console.log("Dealing with an employee.");
 
-        db.collection('TicketsTable').insertOne(req.body);
-        //Rather than Have the user see their JSONified input, give them their Ticket ID.
-        res.send(feedbackstring);
-        //res.send('Data received:\n' + JSON.stringify(req.body));
+            db.collection("ManagerTable").find({ EmpLogin: true }).toArray().then(function (discountCode) {
+
+                // console.log("realdisccode: " + discountCode[0].EmployeeCode);
+                // console.log("given disccode:" + req.body.discountCode);
+
+                if (req.body.discountCode == discountCode[0].EmployeeCode) {
+                    console.log("DiscountCode accepted.");
+                    addTicket(req,res);
+                } else {
+                    console.log("Discount code not accepted");
+                    res.send(CSSStyling + "<div class='box'><form> <h3>Your Employee ID is not valid.</h3><br>Please try again." + backHome + "</form></div>");
+                }
+            });
+        }
+        addTicket(req,res);
     })();
 });
 
@@ -125,7 +162,7 @@ app.post('/post-tickets', function (req, res) {
 app.get('/view-tickets', function (req, res) {
     dbConn.then(function (db) {
         db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
-            feedbackstring = CSSStyling + "<form>"; 
+            feedbackstring = CSSStyling + "<form>";
             feedbackstring += "<h1>Ticket History</h1>";
 
             for (i = 0; i < feedbacks.length; i++) {
@@ -140,12 +177,24 @@ app.get('/view-tickets', function (req, res) {
 /////////// Happy Hour POST and GET requests////////////////////
 
 app.post('/post-happyhour', function (req, res) {
-    dbConn.then(function (db) {
-        //delete req.body._id;
-        db.collection('HappyHourTable').insertOne(req.body);
-    });
-    res.send(CSSStyling + "<form><h1>Happy Hour</h1>" + 'Happy-Hour received:\n' + JSON.stringify(req.body) + "<br><br>"+ backMLanding + "</form>");
+    (async () => {
+        let db = await dbConn;
+        let count = await db.collection('HappyHourTable').count();
+        req.body._id = count + 1;
+        //Set MillisecondTimeIn
+        req.body.timeSet = Date.now();
+        //Set FormattedTimeIn
+        req.body.formattedTimeSet = datetime;
+        console.log(req.body);
 
+        feedbackstring = CSSStyling + "<div class='box'><form>";
+        feedbackstring += "<br> Successfuly set happy hour for " + req.body.hours + " hours from now.";
+        feedbackstring += backMLanding + "</div></form>";
+
+        db.collection('HappyHourTable').insertOne(req.body);
+        res.send(feedbackstring);
+        //res.send('Data received:\n' + JSON.stringify(req.body));
+    })();
 });
 app.get('/view-hh', function (req, res) {
     dbConn.then(function (db) {
@@ -202,19 +251,17 @@ app.get('/view-manager', function (req, res) {
 
 /////////// Chart GET request and draw chart////////////////////
 
-app.get('/view-customer', function (req, res)
-{
-    dbConn.then(function (db)
-    {
+app.get('/view-customer', function (req, res) {
+    dbConn.then(function (db) {
         var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
             let customer= 0;
             let resident = 0;
             let employee = 0;
 
             feedbacks.forEach(function (arrayItem) {
-                for (const [key, value] of Object.entries(arrayItem)){
-                    if (key == "ticketType"){
-                        if (value == "Customer"){
+                for (const [key, value] of Object.entries(arrayItem)) {
+                    if (key == "ticketType") {
+                        if (value == "Customer") {
                             customer += 1;
                         } else if (value == "Resident"){
                             resident +=1;
