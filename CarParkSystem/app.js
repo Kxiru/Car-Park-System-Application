@@ -51,17 +51,25 @@ app.post('/verifyTicketID', function (req, res) {
                     const secondsSpentIn = (feedbacks[0].timeOut - feedbacks[0].timeIn) / 1000;
                     console.log(secondsSpentIn);
                     const hoursSpentIn = secondsSpentIn / 3600;
-                    const stayPrice = (hoursSpentIn * parkRate).toFixed(2);
+                    let stayPrice = (hoursSpentIn * parkRate).toFixed(2);
+                    const employeeDiscount = 0.7;
+                    
+                    receipt = CSSStyling + "<div class='box'><form>";
+                    receipt += "<h2>Thank you for staying in the Car Park.</h2>"
+                    receipt += feedbacks[0].name + ", Your ID is " + criteria + ".<br>";
+
+                    if(feedbacks[0].ticketType == "Employee"){
+
+                        receipt += "<br>As an Employee, please enjoy a 30% discount on your stay. You would have paid: £<b>" + stayPrice + "</b><br>";
+                        stayPrice = stayPrice * employeeDiscount;
+                    }
 
                     //Formatting for receipt generation
-                    receipt = CSSStyling + "<div class='box'><form>";
-                    receipt += "<h2>Thank you for staying in the Car Park.</h2><br>"
-                    receipt += feedbacks[0].name + ", Your ID is " + criteria + "<br>";
-                    receipt += "You signed in at: " + feedbacks[0].formattedTimeIn + ". </br>You signed out at: " + datetime + (".");
+                    receipt += "<br>You signed in at: " + feedbacks[0].formattedTimeIn + ". </br>You signed out at: " + datetime + (".<br>");
 
                     //Receipt completion and payment...
-                    receipt += "<br><hr><br> You spent " + hoursSpentIn.toFixed(2) + " hours in the car park.";
-                    receipt += "<br> At a rate of £" + parkRate + " per hour, you have £" + stayPrice + " to pay.";
+                    receipt += "<br><hr>You spent " + hoursSpentIn.toFixed(2) + " hours in the car park.";
+                    receipt += "<br> At a rate of £" + parkRate + " per hour, you have £<b>" + stayPrice + "</b> to pay.";
                     // pricelink = "<a href='http://www.paypal.me/nkeirukaw/" + stayPrice + "'>Click here to Pay Now</a>";
                     // pricelink = "<input type='button' value='Click here to Pay Now.' onclick='location.href='http://www.paypal.me/nkeirukaw/" + stayPrice + "''>"
                     // pricelink = "<button type='submit' formaction='http://www.paypal.me/nkeirukaw/" + stayPrice + "'>Click me</button>";
@@ -81,28 +89,54 @@ app.post('/verifyTicketID', function (req, res) {
     })();
 });
 
+async function addTicket(req,res) {
+    let db = await dbConn;
+    let count = await db.collection('TicketsTable').count();
+
+    req.body._id = count + 1;
+    //Set MillisecondTimeIn
+    req.body.timeIn = Date.now();
+    //Set FormattedTimeIn
+    req.body.formattedTimeIn = datetime;
+    console.log(req.body);
+
+    //alert("Your Ticket ID is: " + count);
+    feedbackstring = CSSStyling + "<div class='box'><form>";
+    feedbackstring += "<h3>" + req.body.name + ", your ticket has been generated successfully.</h3>Your ticket ID is: <b>" + req.body._id + "</b><br>";
+    feedbackstring += "<br> Please remember your Ticket ID for future reference.";
+    feedbackstring += backHome + "</div></form>";
+
+    db.collection('TicketsTable').insertOne(req.body);
+    //Rather than Have the user see their JSONified input, give them their Ticket ID.
+    res.send(feedbackstring);
+    //res.send('Data received:\n' + JSON.stringify(req.body));
+}
 
 app.post('/post-tickets', function (req, res) {
     (async () => {
+
         let db = await dbConn;
         let count = await db.collection('TicketsTable').count();
-        req.body._id = count + 1;
-        //Set MillisecondTimeIn
-        req.body.timeIn = Date.now();
-        //Set FormattedTimeIn
-        req.body.formattedTimeIn = datetime;
-        console.log(req.body);
 
-        // alert("Your Ticket ID is: " + count);
-        feedbackstring = CSSStyling + "<div class='box'><form>";
-        feedbackstring += "<h3>" + req.body.name + ", your ticket has been generated successfully.</h3>Your ticket ID is: <b>" + req.body._id + "</b><br>";
-        feedbackstring += "<br> Please remember your Ticket ID for future reference.";
-        feedbackstring += backHome + "</div></form>";
+        //Check for Employee and discount code
+        if (req.body.ticketType == "Employee") {
+            // console.log("Dealing with an employee.");
 
-        db.collection('TicketsTable').insertOne(req.body);
-        //Rather than Have the user see their JSONified input, give them their Ticket ID.
-        res.send(feedbackstring);
-        //res.send('Data received:\n' + JSON.stringify(req.body));
+            db.collection("ManagerTable").find({ EmpLogin: true }).toArray().then(function (discountCode) {
+
+                // console.log("realdisccode: " + discountCode[0].EmployeeCode);
+                // console.log("given disccode:" + req.body.discountCode);
+
+                if (req.body.discountCode == discountCode[0].EmployeeCode) {
+                    console.log("DiscountCode accepted.");
+                    addTicket(req,res);
+                } else {
+                    console.log("Discount code not accepted");
+                    res.send(CSSStyling + "<div class='box'><form> <h3>Your Employee ID is not valid.</h3><br>Please try again." + backHome + "</form></div>");
+                }
+            });
+        }
+        addTicket(req,res);
     })();
 });
 
