@@ -75,7 +75,7 @@ app.post('/verifyTicketID', function (req, res) {
                 })
             }
             else {
-                res.send(CSSStyling + '<br><h2>That ticket ID could not be found.</h3>' + backHome);
+                res.send(CSSStyling + '<div class="box"><br><h3>This ticket ID could not be found.</h3><br>Please check the ID and try again.' + backHome + "</div>");
             }
         });
     })();
