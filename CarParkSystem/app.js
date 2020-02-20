@@ -252,11 +252,11 @@ app.get('/view-manager', function (req, res) {
 
 /////////// Chart GET request and draw chart////////////////////
 
-app.get('/view-customer', function (req, res) {
+app.get('/tickets-sold', function (req, res) {
     dbConn.then(function (db) {
         var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
-            let customer = 0;
-            let residence = 0;
+            let customer= 0;
+            let resident = 0;
             let employee = 0;
 
             feedbacks.forEach(function (arrayItem) {
@@ -264,56 +264,67 @@ app.get('/view-customer', function (req, res) {
                     if (key == "ticketType") {
                         if (value == "Customer") {
                             customer += 1;
-                        } else if (value == "Residence") {
-                            residence += 1;
-                        } else if (value == "Employee") {
-                            employee += 1;
+                        } else if (value == "Resident"){
+                            resident +=1;
+                        }else if (value == "Employee"){
+                            employee +=1;
                         }
                     }
                 };
             });
-            let data = [customer, residence, employee];
-            let labels = ["Customer", "Residence", "Employee"]
-            res.status(200).json(data);
+            let data = [customer, resident, employee];
+            let labels = ["Customer", "Resident", "Employee"]
+            //res.status(200).json(data);
             res.send(data)
 
         });
-        /*function renderChart(data, labels) {
-                var ctx = document.getElementById("myChart").getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'This week',
-                            data: data,
-                        }]
-                    },
-                });
-            };*/
+
     });
 });
 
-/*
-app.get('/myChart', function renderChart(data, labels) {
-    var ctx = document.getElementById("myChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'This week',
-                data: data,
-            }]
-        },
-    });
-})
+app.get('/insidecarpark', function (req, res) {
+    dbConn.then(function (db) {
+        var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+            let customer, resident, employee = false;
+            carsin =[0,0,0]
 
-("#renderBtn").click(
-    function () {
-        data = [20000, 14000, 12000, 15000, 18000, 19000, 22000];
-        labels =  ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-        renderChart(data, labels);
-    }
-);*/
+            feedbacks.forEach(function (arrayItem) {
+                customer=false;
+                resident = false;
+                employee = false;
+                for (const [key, value] of Object.entries(arrayItem)) {
+                    if (key == "ticketType") {
+                        if (value == "Customer") {
+                            customer = true;
+                            carsin[0] += 1
+                        } else if (value == "Resident") {
+                            resident = true;
+                            carsin[1] += 1
+                        } else if (value == "Employee") {
+                            employee = true;
+                            carsin[2] += 1
+                        }
+                    }
+                    if (key == "timeOut") {
+                        if (customer == true) {
+                            carsin[0] -= 1
+                        } else if (resident == true) {
+                            carsin[1] -= 1
+                        } else if (employee == true) {
+                            carsin[2] -= 1
+                        }
+                    }
+                }
+            });
+            let data = [customer, resident, employee];
+            let labels = ["Customer", "Resident", "Employee"]
+            res.status(200).json(carsin);
+            res.send(data)
+
+        });
+
+    });
+});
+
+
 app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');

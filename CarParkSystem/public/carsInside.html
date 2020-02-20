@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Report</title>
+        <link rel="stylesheet" href="css/style.css">
+        <script src= "https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+    </head>
+    <body>
+      <div class ="chart-box" >
+        <canvas id="myChart" height="75%" width="75%"></canvas>
+      </div>
+
+      <script>
+
+        fetch('/insidecarpark').then(function(response){
+        return response.json();
+        }).then(function (data) {
+            console.log('MY ARRAY', data);
+            ChartInitialise(data)
+
+        })
+        const data = [8, 0, 1];
+        console.log(Chart.defaults);
+        //console.log(datavalue)
+
+        function ChartInitialise (datavalue){
+
+            let myChart = document.getElementById('myChart').getContext('2d');
+            myChart.canvas.parentNode.style.height = '512px';
+            myChart.canvas.parentNode.style.width = '512px';
+
+
+            let newChart = new Chart(myChart, {
+                type: 'bar',
+                data: {
+                    labels: ["Customer", "Resident", "Employee"],
+                    datasets: [{
+                        label: 'Number of cars',
+                        data: datavalue,
+                        backgroundColor: '#3a96f2',
+                        hoverBorderWidth: 6,
+                        hoverBorderColor: '#969696'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Number of Cars Currently in Carpark',
+                        fontSize: 20
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            },
+
+                            display: true,
+                        }]
+                    }
+
+
+                }
+            });
+        }
+
+      </script>
+
+    </body>
+</html>
