@@ -14,7 +14,7 @@
 
       <script>
 
-        fetch('/tickets-sold').then(function(response){
+        fetch('/insidecarpark').then(function(response){
         return response.json();
         }).then(function (data) {
             console.log('MY ARRAY', data);
@@ -47,7 +47,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: 'Automatic report',
+                        text: 'Number of Cars Currently in Carpark',
                         fontSize: 20
                     },
                     scales: {
