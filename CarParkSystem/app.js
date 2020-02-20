@@ -273,7 +273,7 @@ app.get('/tickets-sold', function (req, res) {
             });
             let data = [customer, resident, employee];
             let labels = ["Customer", "Resident", "Employee"]
-            res.status(200).json(data);
+            //res.status(200).json(data);
             res.send(data)
 
         });
