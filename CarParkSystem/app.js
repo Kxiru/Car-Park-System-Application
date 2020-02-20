@@ -135,8 +135,9 @@ app.post('/post-tickets', function (req, res) {
                     res.send(CSSStyling + "<div class='box'><form> <h3>Your Employee ID is not valid.</h3><br>Please try again." + backHome + "</form></div>");
                 }
             });
-        }
+        }else{
         addTicket(req,res);
+        }
     })();
 });
 
