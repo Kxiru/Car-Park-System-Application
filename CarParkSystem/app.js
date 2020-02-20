@@ -208,7 +208,7 @@ app.get('/view-customer', function (req, res)
     {
         var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
             let customer= 0;
-            let residence = 0;
+            let resident = 0;
             let employee = 0;
 
             feedbacks.forEach(function (arrayItem) {
@@ -216,16 +216,16 @@ app.get('/view-customer', function (req, res)
                     if (key == "ticketType"){
                         if (value == "Customer"){
                             customer += 1;
-                        } else if (value == "Residence"){
-                            residence +=1;
+                        } else if (value == "Resident"){
+                            resident +=1;
                         }else if (value == "Employee"){
                             employee +=1;
                         }
                     }
                 };
             });
-            let data = [customer, residence, employee];
-            let labels = ["Customer", "Residence", "Employee"]
+            let data = [customer, resident, employee];
+            let labels = ["Customer", "Resident", "Employee"]
             res.status(200).json(data);
             res.send(data)
 
