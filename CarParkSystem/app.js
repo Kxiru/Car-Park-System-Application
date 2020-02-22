@@ -13,7 +13,7 @@ var datetime = currentdate.getDate() + "/"
     + currentdate.getSeconds();
 
 const backHome = "<input type='submit' formaction='Homepage.html' class='button_active' value='Back to Home'></input>";
-const backMLanding = "<input type='submit' formaction='managerLanding.html' class='button_active' value='Back to Landing'></input>";
+const backMLanding = "<input type='submit' formaction='managerLanding.html' class='button_active' value='BACK TO LANDING'></input>";
 const CSSStyling = "<head> <meta charset='utf-8'> <title>Receipt</title> <link rel='stylesheet' href='css/style.css'> </head>";
 
 var dbConn = mongodb.MongoClient.connect("mongodb://Admin:admin123@cs1813namedb-shard-00-00-maax9.mongodb.net:27017,cs1813namedb-shard-00-01-maax9.mongodb.net:27017,cs1813namedb-shard-00-02-maax9.mongodb.net:27017/test?ssl=true&replicaSet=CS1813NameDB-shard-0&authSource=admin&retryWrites=true&w=majority/CarParkDatabase");
@@ -163,13 +163,14 @@ app.post('/post-tickets', function (req, res) {
 app.get('/view-tickets', function (req, res) {
     dbConn.then(function (db) {
         db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
-            feedbackstring = CSSStyling + "<form>";
-            feedbackstring += "<h1>Ticket History</h1>";
+            feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
+            "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
+            feedbackstring += "<h2>TICKET HISTORY</h2> <div class='scroll-box'>";
 
             for (i = 0; i < feedbacks.length; i++) {
                 feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
             }
-            feedbackstring += backMLanding + "</form>";
+            feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
             res.status(200).send(feedbackstring);
         });
     });
@@ -188,7 +189,7 @@ app.post('/post-happyhour', function (req, res) {
         req.body.formattedTimeSet = datetime;
         console.log(req.body);
 
-        feedbackstring = CSSStyling + "<div class='box'><form>";
+        feedbackstring = CSSStyling + "<div class='response-box'><form>";
         feedbackstring += "<br> Successfuly set happy hour for " + req.body.hours + " hours from now.";
         feedbackstring += backMLanding + "</div></form>";
 
@@ -200,13 +201,14 @@ app.post('/post-happyhour', function (req, res) {
 app.get('/view-hh', function (req, res) {
     dbConn.then(function (db) {
         db.collection('HappyHourTable').find({}).toArray().then(function (feedbacks) {
-            feedbackstring = CSSStyling + "<form>";
-            feedbackstring += "<h1>Happy Hour Log</h1>"
-
+            feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
+            "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
+            feedbackstring += "<h2>HAPPY HOUR LOG</h2> <div class='scroll-box'>";
+            
             for (i = 0; i < feedbacks.length; i++) {
                 feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
             }
-            feedbackstring += backMLanding + "</form>";
+            feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
             res.status(200).send(feedbackstring);
         });
     });
@@ -239,12 +241,14 @@ app.post('/post-manager', function (req, res) {
 app.get('/view-manager', function (req, res) {
     dbConn.then(function (db) {
         db.collection('ManagerTable').find({}).toArray().then(function (feedbacks) {
-            feedbackstring = CSSStyling + "<form>";
-            feedbackstring += "<h1>Manager Table</h1>"
+
+            feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
+            "<img class='mainicon' src='css/images/managericon.png' alt='logo'>";
+            feedbackstring += "<h2>MANAGERS TABLE</h2> <div class='scroll-box'>";
             for (i = 0; i < feedbacks.length; i++) {
                 feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
             }
-            feedbackstring += backMLanding + "</form>";
+            feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
             res.status(200).send(feedbackstring);
         });
     });
