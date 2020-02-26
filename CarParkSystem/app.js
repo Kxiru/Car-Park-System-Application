@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var mongodb = require('mongodb');
+var nodemailer = require('nodemailer');
 
 
 var currentdate = new Date();
@@ -235,6 +236,45 @@ app.post('/post-manager', function (req, res) {
         db.collection('ManagerTable').insertOne(req.body);
     });
     res.send('Manager received:\n' + JSON.stringify(req.body));
+
+});
+
+app.post('/send-ManagerCr', function (req, res)
+{
+    let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+        user: 'carparksystem.cs1813@gmail.com',
+        pass: 'snapchat'
+    }
+    });
+
+    console.log(req.body.Username);
+    console.log(req.body.Password);
+    console.log(req.body.Email);
+    var mailContent = "You have been assigned as a new manager! Here are your new credentials:\n" + "Username: " + req.body.Username + "\n" + "Password: " + req.body.Password + "\n";
+    let mailOptions = {
+    from: 'carparksystem.cs1813@gmail.com',
+    to: req.body.Email,
+    subject: 'New Manager Car Par Credentials',
+    text: mailContent
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) console.log(error);
+      else
+      {
+            dbConn.then(function (db)
+            {
+                db.collection('ManagerTable').insertOne(req.body);
+            });
+            console.log('Email sent: ' + info.response);
+      }
+    });
+    res.redirect('managerLanding.html');
 
 });
 
