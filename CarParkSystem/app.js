@@ -277,10 +277,7 @@ app.get('/tickets-sold', function (req, res) {
                 };
             });
             let data = [customer, resident, employee];
-            let labels = ["Customer", "Resident", "Employee"]
-            //res.status(200).json(data);
             res.send(data)
-
         });
 
     });
@@ -289,13 +286,12 @@ app.get('/tickets-sold', function (req, res) {
 app.get('/insidecarpark', function (req, res) {
     dbConn.then(function (db) {
         var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
-            let customer, resident, employee = false;
             carsin =[0,0,0]
 
             feedbacks.forEach(function (arrayItem) {
-                customer=false;
-                resident = false;
-                employee = false;
+                let customer=false;
+                let resident = false;
+                let employee = false;
                 for (const [key, value] of Object.entries(arrayItem)) {
                     if (key == "ticketType") {
                         if (value == "Customer") {
@@ -320,11 +316,73 @@ app.get('/insidecarpark', function (req, res) {
                     }
                 }
             });
-            let data = [customer, resident, employee];
-            let labels = ["Customer", "Resident", "Employee"]
-            res.status(200).json(carsin);
-            res.send(data)
+            res.send(carsin)
+        });
 
+    });
+});
+
+app.post('/report-timings', function (req, res) {
+    let startReport = req.body.startTime;
+    let endReport = req.body.endTime;
+    res.redirect('manualReport.html')
+    res.send({startReport, endReport})
+
+})
+
+
+app.get('/manual-report', function (req, res) {
+    var startReport;
+    var endReport;
+    fetch('/report-timings').then(function(response){
+        return response.json();
+        }).then(function (data) {
+            startReport = data.startReport;
+            endReport = data.endReport;
+        })
+    console.log(startReport, endReport)
+
+    dbConn.then(function (db) {
+        var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+            var custoIn = new Array(endReport.getHours()-startReport.getHours())
+            var residIn = new Array(endReport.getHours()-startReport.getHours())
+            var emploIn = new Array(endReport.getHours()-startReport.getHours())
+
+            feedbacks.forEach(function (arrayItem) {
+                let customer=false;
+                let resident = false;
+                let employee = false;
+                for (const [key, value] of Object.entries(arrayItem)) {
+                    if (key == "ticketType") {
+                        if (value == "Customer") {
+                            customer = true;
+                        } else if (value == "Resident") {
+                            resident = true;
+                        } else if (value == "Employee") {
+                            employee = true;
+                        }
+                    }
+                    if (key == "formattedTimeIn") {
+                        if (value.getDate() == startReport.getDate() && value.getMonth() == startReport.getMonth() ) {
+                            if (value.getHours() >= startReport.getHours() && value.getHours() <= endReport.getHours()) {
+                                if (customer == true) {
+                                    custoIn[value.getHours() - startReport.getHours()-1] +=1
+                                } else if (resident == true) {
+                                    residIn[value.getHours() - startReport.getHours()-1] +=1
+                                } else if (employee == true) {
+                                    emploIn[value.getHours() - startReport.getHours()-1] +=1
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            var i;
+            let timings = []
+            for (i = startReport.getHours; i < endReport.getHours; i++) {
+                timings[i -startReport.getHours] = i
+            }
+            res.send({custoIn,residIn, emploIn, timings})
         });
 
     });
