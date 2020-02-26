@@ -110,5 +110,6 @@ HappyhourTable = Database.HappyHourTable
 #hh1 = HappyHour(x + 1, currTime.hours, currTime.minutes, currTime.seconds, 4)
 #AddHappyHour(HappyhourTable, hh1)
 #GetAllItems(HappyhourTable)
-print(Database.list_collection_names())
+#print(Database.list_collection_names())
+GetAllItems(ManagerTable)
 
