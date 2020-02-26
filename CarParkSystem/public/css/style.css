@@ -38,22 +38,32 @@ html {
     grid-gap: 5px;
     border-radius: 24px;
     text-align: center;
-
 }
 
 .grid-title {
     grid-area: grid-title;
     background: rgba(0,0,0,0.5);
+    height: 70px;
+    
     font-size: 15px;
     text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-    direction: rtl;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    /* flex-wrap: wrap; */
+    /*white-space: nowrap;
+    direction: rtl; */
+}
+
+.grid-title h3 {
+    position: absolute;
+    left: 15%;
+    top: 0.5%;
 }
 
 .grid-title input[type = "button"] {
-    display: block;
-    direction: ltr;
+    position: absolute;
+    right: 5%;
     float: right;
     clear: both;
 }
@@ -88,10 +98,20 @@ html {
     border-radius: 50%;
 }
 
+.dash-manager-img {
+    width: 50px;
+    height: 50px;
+    top: 5px;
+    /*left: calc(50% - 50px);*/
+    position: absolute;
+    left: 3%;
+    border: 2px solid #00c7a2;
+    border-radius: 50%;
+}
+
 .menu-box {
     min-width: 150px;
     max-width: 300px;
-    
     min-height: 20px;
     max-height: 700px;
     position: absolute;
@@ -106,6 +126,34 @@ html {
     display: inline-block;
     box-sizing: border-box;
     padding: 70px 30px;
+}
+
+.response-box {
+
+    width: 1200px;
+    height: 680px;
+    position: absolute;
+    
+    margin: 0 auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    border-radius: 24px;
+    text-align: center;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 70px 30px;
+
+}
+
+.scroll-box {
+    background: rgba(0,0,0,0.8);
+    width: 1150px;
+    height: 370px;
+    overflow: scroll;
+    text-align: left;
+    font-size: 15px;
 }
 
 .menu-box h1 {
@@ -127,6 +175,15 @@ html {
     width: 100px;
     height: 100px;
     top: -50px;
+    left: calc(50% - 50px);
+    border: 2px solid #00c7a2;
+    border-radius: 50%;
+}
+
+.response-box .mainicon {
+    width: 70px;
+    height: 70px;
+    top: 0px;
     left: calc(50% - 50px);
     border: 2px solid #00c7a2;
     border-radius: 50%;
@@ -280,6 +337,26 @@ input[type = "number"] {
     transition: 0.2s;
 }
 
+.go-back-form input[type = "submit"] {
+    border: 0;
+    position: absolute;
+    /*top: 85%;
+    left: 45%;*/
+    background: rgba(0,199,163,0.3);
+    display: block;
+    margin: 20px auto;
+    font-size: 15px;
+    text-align: center;
+    border: 2px solid #00c7a2;
+    padding 14px 10px;
+    width: 160px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.2s;
+
+}
+
 .box input[type = "button"], .grid-title input[type = "button"], .grid-content-a input[type = "button"], .grid-sidebar input[type = "button"] {
     border: 0;
     background: rgba(145,188,201,0.3);
@@ -295,7 +372,12 @@ input[type = "number"] {
     transition: 0.2s;
 }
 
-.box input[type = "submit"]:hover, .grid-sidebar input[type = "submit"]:hover {
+.box input[type = "submit"]:hover, .response-box input[type = "submit"]:hover, .grid-sidebar input[type = "submit"]:hover {
+    width: 180px;
+    background: rgba(0,199,163,0.7);
+}
+
+.go-back-form input[type = "submit"]:hover {
     width: 180px;
     background: rgba(0,199,163,0.7);
 }
