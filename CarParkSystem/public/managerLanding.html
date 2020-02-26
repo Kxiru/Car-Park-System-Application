@@ -33,6 +33,30 @@
             <img class="dashboard-img" src="css/images/reporticon.png" alt="logo">
             <br>
             <input type="button" name="" value="GET REPORT" onclick="location.href= 'reportLanding.html';"> <br>
+
+            <form class="grid-content-a" action="/report-timings" method="POST">
+                Choose report time slot: <br>
+                From: Until:<br>
+                <input type="datetime-local" name="startTime">
+
+                <input type="datetime-local" name="endTime">
+                <input type="submit" name="" value="SUBMIT" onclick="location.href='manualReport.html'">
+            </form>
+            <!--<div class ="chart-box" >
+                <canvas id="myChart" height="75px" width="75px"></canvas>
+            </div>-->
+            <!--<script>
+                fetch('/manual-report').then(function(response){
+                    return response.json();
+                    }).then(function ({custoIn,residIn, emploIn, timings}) {
+                        console.log('MY ARRAY', data);
+                        custoIn = date[0];
+                        residIn = date[1];
+                        emploIn = date[2];
+                        timings = date[3];
+                        ChartInitialise(custoIn, residIn, emploIn, timings)
+                    })
+            </script>-->
         </div>
         <div class="grid-content-b">
             <br>
@@ -52,6 +76,60 @@
     <footer id="footer">
         Group 8
     </footer>
+    <script>
+        function ChartInitialise (custoIn, residIn, emploIn, timings){
+
+            let myChart = document.getElementById('myChart').getContext('2d');
+            myChart.canvas.parentNode.style.height = '512px';
+            myChart.canvas.parentNode.style.width = '512px';
+
+
+            let newChart = new Chart(myChart, {
+                type: 'bar',
+                data: {
+                    labels: timings,
+                    datasets: [{
+                        label: 'Customer',
+                        data: custoIn,
+                        backgroundColor: '#3a96f2',
+                        hoverBorderWidth: 6,
+                        hoverBorderColor: '#969696'
+                    }
+                    {
+                        label: 'Resident',
+                        data: residIn,
+                        backgroundColor: '#21C085',
+                        hoverBorderWidth: 6,
+                        hoverBorderColor: '#969696'
+                    }{
+                        label: 'Employee',
+                        data: emploIn,
+                        backgroundColor: '#2166C0',
+                        hoverBorderWidth: 6,
+                        hoverBorderColor: '#969696'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Automatic report',
+                        fontSize: 20
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            },
+
+                            display: true,
+                        }]
+                    }
+
+
+                }
+            });
+        }
+    </script>
 
 </body>
 

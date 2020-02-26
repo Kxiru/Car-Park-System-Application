@@ -325,6 +325,7 @@ app.get('/insidecarpark', function (req, res) {
 app.post('/report-timings', function (req, res) {
     let startReport = req.body.startTime;
     let endReport = req.body.endTime;
+    res.redirect('manualReport.html')
     res.send({startReport, endReport})
 
 })
@@ -339,6 +340,7 @@ app.get('/manual-report', function (req, res) {
             startReport = data.startReport;
             endReport = data.endReport;
         })
+    console.log(startReport, endReport)
 
     dbConn.then(function (db) {
         var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
