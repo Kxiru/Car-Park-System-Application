@@ -189,7 +189,7 @@ app.post('/post-happyhour', function (req, res) {
         req.body.formattedTimeSet = datetime;
         console.log(req.body);
 
-        feedbackstring = CSSStyling + "<div class='response-box'><form>";
+        feedbackstring = CSSStyling + "<div class='box'><form>";
         feedbackstring += "<br> Successfuly set happy hour for " + req.body.hours + " hours from now.";
         feedbackstring += backMLanding + "</div></form>";
 
