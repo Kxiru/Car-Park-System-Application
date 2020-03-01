@@ -232,12 +232,65 @@ app.get('/view-hh', function (req, res) {
 
 /////////// Manager POST and GET requests////////////////////
 
+function getRandomDigit_ASCII()
+{
+    var minBase = 48;
+    var code = Math.random() * (57 - 48) + minBase;
+    var chr = String.fromCharCode(code);
+    return chr;
+}
+
+function getRandomUppercaseLetter_ASCII()
+{
+    var minBase = 65;
+    var code = Math.random() * (90 - 65) + minBase;
+    var chr = String.fromCharCode(code);
+    return chr;
+}
+
+function getRandomNonUppercaseLetter_ASCII()
+{
+    var minBase = 97;
+    var code = Math.random() * (122 - 97) + minBase;
+    var chr = String.fromCharCode(code);
+    return chr;
+}
+
+function createHashPassword()
+{
+    var password = "";
+
+    password += getRandomNonUppercaseLetter_ASCII();
+    password += getRandomUppercaseLetter_ASCII();
+    password += getRandomUppercaseLetter_ASCII();
+    password += getRandomUppercaseLetter_ASCII();
+    password += getRandomNonUppercaseLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomUppercaseLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomNonUppercaseLetter_ASCII();
+    password += getRandomNonUppercaseLetter_ASCII();
+    password += getRandomUppercaseLetter_ASCII();
+    password += getRandomNonUppercaseLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomUppercaseLetter_ASCII();
+    password += getRandomNonUppercaseLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    // in total, 20 characters
+    return password;
+}
+
 app.post('/forgotManagerCredentials', function(req, res)
 {
     dbConn.then(function (db) {
 
-        db.collection('ManagerTable').find({ 'Username': req.body.F_Username, 'Password': req.body.F_Email }).toArray().then(function (feedbacks) {
-
+        db.collection('ManagerTable').find({ 'Username': req.body.F_Username, 'Email': req.body.F_Email }).toArray().then(function (feedbacks)
+        {
+            console.log(req.body.F_Username + " " + req.body.F_Email);
             if (feedbacks.length != 0)
             {
                 // need to do some checking of the credentials
@@ -245,6 +298,13 @@ app.post('/forgotManagerCredentials', function(req, res)
                 // 2. change the password
                 // 3. send the password via email
 
+                // i'll make my own hash for the new password instead of using an app
+                // m - non-uppercase character - char 97-->120
+                // M - uppercase character - char 65-->90
+                // d - digit - char 48-->57
+                // the password will be of length 20
+                // m-M-M-M-m-d-M-d-d-d-m-m-M-m-d-d-M-m-d-d
+                console.log(createHashPassword());
             }
             else res.redirect('/ErrorResetPassword.html');
         });
