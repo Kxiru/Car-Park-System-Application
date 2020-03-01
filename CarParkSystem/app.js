@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var mongodb = require('mongodb');
 var nodemailer = require('nodemailer');
 
+var currentUsername = "";
 
 var currentdate = new Date();
 var datetime = currentdate.getDate() + "/"
@@ -219,7 +220,7 @@ app.get('/view-hh', function (req, res) {
             feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
             "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
             feedbackstring += "<h2>HAPPY HOUR LOG</h2> <div class='scroll-box'>";
-            
+
             for (i = 0; i < feedbacks.length; i++) {
                 feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
             }
@@ -236,8 +237,12 @@ app.post('/view-managerCr', function (req, res) {
 
         db.collection('ManagerTable').find({ 'Username': req.body.name, 'Password': req.body.password }).toArray().then(function (feedbacks) {
 
-            if (feedbacks.length != 0) res.redirect('/managerLanding.html')
-            else res.redirect('managerlogin.html');
+            if (feedbacks.length != 0)
+            {
+                currentUsername = req.body.name;
+                res.redirect('/managerLanding.html');
+            }
+            else res.redirect('/WrongManagerCredentials.html');
 
         });
     });
@@ -253,8 +258,67 @@ app.post('/post-manager', function (req, res) {
 
 });
 
-app.post('/send-ManagerCr', function (req, res)
-{
+app.post('/changePasswordManager', function(req, res){
+    dbConn.then(function(db)
+    {
+        db.collection('ManagerTable').find({'Username': currentUsername, 'Password': req.body.CurrentPass}).toArray().then(function (feedbacks)
+        {
+            try
+            {
+                var passw = feedbacks[0].Password;
+                var usern = feedbacks[0].Username;
+                var email = feedbacks[0].Email;
+                var currentPass = req.body.CurrentPass;
+                var newPass = req.body.NewPass;
+                var confirmPass = req.body.ConfirmPass;
+
+                if (passw == currentPass && newPass == confirmPass && currentUsername == usern)
+                {
+                    db.collection('ManagerTable').update(
+                        { Username: usern },
+                        { $set: { 'Password': newPass } }
+                    );
+
+                    // send email as notification
+                    let transporter = nodemailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 587,
+                        secure: false,
+                        requireTLS: true,
+                        auth: {
+                            user: 'carparksystem.cs1813@gmail.com',
+                            pass: 'snapchat'
+                        }
+                        });
+
+                        var mailContent = "Somebody has changed a password for the following user: " + currentUsername + " . \n If you recognize this action, you can leave this email alone. If not, please let us know by sending a reply to this email.";
+                        let mailOptions = {
+                        from: 'carparksystem.cs1813@gmail.com',
+                        to: email,
+                        subject: 'Change Password Action Detected',
+                        text: mailContent
+                        };
+
+                        transporter.sendMail(mailOptions, function(error, info){
+                          if (error) console.log(error);
+                          else console.log('Email sent: ' + info.response);
+                    });
+
+                    currentUsername = ""; // so that testers cannot jump to this page without the username set up
+                    res.redirect('/SuccessChangePassword.html');
+                }
+                else res.redirect('/ErrorChangePassword.html');
+            }
+            catch(error)
+            {
+                if (currentUsername.length != 0) res.redirect('/ErrorChangePassword');
+                else res.redirect('/NotLoggedInChangePasswordAttempt.html');
+            }
+        });
+    });
+});
+
+app.post('/send-ManagerCr', function (req, res){
     let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
@@ -273,7 +337,7 @@ app.post('/send-ManagerCr', function (req, res)
     let mailOptions = {
     from: 'carparksystem.cs1813@gmail.com',
     to: req.body.Email,
-    subject: 'New Manager Car Par Credentials',
+    subject: 'New Manager Car Park Credentials',
     text: mailContent
     };
 

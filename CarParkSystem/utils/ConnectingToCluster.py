@@ -94,6 +94,13 @@ def AddHappyHour(HappyHourTable, happyhour):
     except NotImplementedError:
         print("Could not do operation of adding new happy hour")
 
+def DeleteManager(ManagerTable, username):
+    try:
+        query = { "Username": username }
+        ManagerTable.delete_many(query)
+    except NotImplementedError:
+        print("Could not do operation of deleting manager")
+
 Database = my_client.test
 TicketTable = Database.TicketsTable
 ManagerTable = Database.ManagerTable
@@ -111,5 +118,6 @@ HappyhourTable = Database.HappyHourTable
 #AddHappyHour(HappyhourTable, hh1)
 #GetAllItems(HappyhourTable)
 #print(Database.list_collection_names())
+#DeleteManager(ManagerTable, "Dave123")
 GetAllItems(ManagerTable)
 
