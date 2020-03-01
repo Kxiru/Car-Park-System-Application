@@ -241,9 +241,12 @@ app.post('/forgotManagerCredentials', function(req, res)
             if (feedbacks.length != 0)
             {
                 // need to do some checking of the credentials
+                // 1. create a proper hash to change the password with
+                // 2. change the password
+                // 3. send the password via email
+
             }
             else res.redirect('/ErrorResetPassword.html');
-
         });
     });
 
