@@ -206,7 +206,7 @@ app.get('/view-hh', function (req, res) {
             feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
             "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
             feedbackstring += "<h2>HAPPY HOUR LOG</h2> <div class='scroll-box'>";
-            
+
             for (i = 0; i < feedbacks.length; i++) {
                 feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
             }
@@ -223,7 +223,11 @@ app.post('/view-managerCr', function (req, res) {
 
         db.collection('ManagerTable').find({ 'Username': req.body.name, 'Password': req.body.password }).toArray().then(function (feedbacks) {
 
-            if (feedbacks.length != 0) res.redirect('/managerLanding.html')
+            if (feedbacks.length != 0)
+            {
+                currentUsername = req.body.name;
+                res.redirect('/managerLanding.html');
+            }
             else res.redirect('/WrongManagerCredentials.html');
 
         });
@@ -240,8 +244,32 @@ app.post('/post-manager', function (req, res) {
 
 });
 
-app.post('/send-ManagerCr', function (req, res)
+app.post('/changePasswordManager', function(req, res)
 {
+    dbConn.then(function(db)
+    {
+        db.collection('ManagerTable').find({'Username': currentUsername, 'Password': req.body.CurrentPass}).toArray().then(function (feedbacks)
+        {
+            if (feedbacks.length != 0 && req.body.NewPass == req.body.ConfirmPass)
+            {
+                //console.log('Current Password' + req.body.CurrentPass);
+                //console.log('New Password: ' + req.body.NewPass);
+                //console.log('Confirmed Password: ' + req.body.ConfirmPass);
+
+                db.collection('ManagerTable').update(
+                    { Username: currentUsername },
+                    { $set: { 'Password': req.body.NewPass } }
+                );
+
+
+                res.redirect('/SuccessChangePassword.html');
+            }
+            else res.redirect('/ErrorChangePassword.html');
+        });
+    });
+});
+
+app.post('/send-ManagerCr', function (req, res){
     let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
