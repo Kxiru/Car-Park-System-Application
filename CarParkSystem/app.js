@@ -232,6 +232,136 @@ app.get('/view-hh', function (req, res) {
 
 /////////// Manager POST and GET requests////////////////////
 
+function getRandomDigit_ASCII()
+{
+    var minBase = 48;
+    var code = Math.random() * (57 - 48) + minBase;
+    var chr = String.fromCharCode(code);
+    return chr;
+}
+
+function getRandomUppercaseLetter_ASCII()
+{
+    var minBase = 65;
+    var code = Math.random() * (90 - 65) + minBase;
+    var chr = String.fromCharCode(code);
+    return chr;
+}
+
+function getRandomNonUppercaseLetter_ASCII()
+{
+    var minBase = 97;
+    var code = Math.random() * (122 - 97) + minBase;
+    var chr = String.fromCharCode(code);
+    return chr;
+}
+
+function getRandomLetter_ASCII()
+{
+    // this is to prevent the hash being easily cracked
+    var x = Math.floor(Math.random() * Math.floor(2));
+    if (x == 1) return getRandomNonUppercaseLetter_ASCII();
+    return getRandomUppercaseLetter_ASCII();
+}
+
+function createHashPassword()
+{
+    var password = "";
+
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    // in total, 20 characters
+    return password;
+}
+
+app.post('/forgotManagerCredentials', function(req, res)
+{
+    dbConn.then(function (db) {
+
+        db.collection('ManagerTable').find({ 'Username': req.body.F_Username, 'Email': req.body.F_Email }).toArray().then(function (feedbacks)
+        {
+            if (feedbacks.length != 0)
+            {
+                // need to do some checking of the credentials
+                // 1. create a proper hash to change the password with
+                // 2. change the password
+                // 3. send the password via email
+
+                // i'll make my own hash for the new password instead of using an app
+                // m - non-uppercase character - char 97-->120
+                // M - uppercase character - char 65-->90
+                // d - digit - char 48-->57
+                // the password will be of length 20
+                // m-M-M-M-m-d-M-d-d-d-m-m-M-m-d-d-M-m-d-d
+
+                var usern = req.body.F_Username;
+                var email = req.body.F_Email;
+
+                // get the new password
+                var newPass = createHashPassword();
+
+                // update the query
+                db.collection('ManagerTable').update(
+                        { Username: usern, Email: email},
+                        { $set: { 'Password': newPass } }
+                    );
+
+                // send email to user
+
+                let transporter = nodemailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 587,
+                        secure: false,
+                        requireTLS: true,
+                        auth: {
+                            user: 'carparksystem.cs1813@gmail.com',
+                            pass: 'snapchat'
+                        }
+                        });
+
+                        var mailContent = "";
+                        mailContent = "We've detected that you've tried to reset your password.\n"
+                        mailContent += "You can enter this password into the login page and change it afterwards.\n";
+                        mailContent += "Here is your new password: " + newPass + ". ";
+                        let mailOptions = {
+                        from: 'carparksystem.cs1813@gmail.com',
+                        to: email,
+                        subject: 'Reset Password Action Detected',
+                        text: mailContent
+                        };
+
+                        transporter.sendMail(mailOptions, function(error, info){
+                          if (error) console.log(error);
+                          else console.log('Email sent: ' + info.response);
+                    });
+
+                 // redirect
+                 res.redirect('/SuccessResetPassword.html');
+            }
+            else res.redirect('/ErrorResetPassword.html');
+        });
+    });
+
+});
+
 app.post('/view-managerCr', function (req, res) {
     dbConn.then(function (db) {
 
@@ -247,7 +377,6 @@ app.post('/view-managerCr', function (req, res) {
         });
     });
 });
-
 
 app.post('/post-manager', function (req, res) {
     dbConn.then(function (db) {
