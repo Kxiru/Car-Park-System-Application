@@ -13,8 +13,10 @@
       </div>
 
       <script>
+        var search = window.location.search;
+        var queryparam = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}', function(key, value) { return key===""?value:decodeURIComponent(value) })
 
-        fetch('/manual-report').then(function(response){
+        fetch('/manual-report/'+ search).then(function(response){
             return response.json();
             }).then(function (data) {
                 console.log('MY ARRAY', data);
@@ -61,7 +63,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: 'Automatic report',
+                        text: 'Manual reports',
                         fontSize: 20
                     },
                     scales: {

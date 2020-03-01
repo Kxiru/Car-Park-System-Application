@@ -19,18 +19,13 @@
         }).then(function (data) {
             console.log('MY ARRAY', data);
             ChartInitialise(data)
-
         })
-        const data = [8, 0, 1];
-        console.log(Chart.defaults);
-        //console.log(datavalue)
 
         function ChartInitialise (datavalue){
 
             let myChart = document.getElementById('myChart').getContext('2d');
             myChart.canvas.parentNode.style.height = '512px';
             myChart.canvas.parentNode.style.width = '512px';
-
 
             let newChart = new Chart(myChart, {
                 type: 'bar',

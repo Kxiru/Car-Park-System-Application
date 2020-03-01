@@ -39,11 +39,18 @@ app.post('/verifyTicketID', function (req, res) {
         console.log("Passed ID: " + criteria);
         // db.collection('TicketsTable').find({ id: 3 }).toArray().then(function (feedbacks) {
         db.collection('TicketsTable').find({ _id: parseInt(criteria) }).toArray().then(function (initialfeedbacks) {
+            let currentdate = new Date()
+            var datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth() + 1) + "/"
+                + currentdate.getFullYear() + " , "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
             if (initialfeedbacks.length != 0) {
                 // Updates the time out (milliseconds)
                 db.collection('TicketsTable').update(
                     { _id: parseInt(criteria) },
-                    { $set: { 'timeOut': Date.now(), 'formattedTimeOut': datetime } }
+                    { $set: { 'timeOut': currentdate, 'formattedTimeOut': datetime } }
                 );
 
                 db.collection('TicketsTable').find({ _id: parseInt(criteria) }).toArray().then(function (feedbacks) {
@@ -94,10 +101,17 @@ app.post('/verifyTicketID', function (req, res) {
 async function addTicket(req,res) {
     let db = await dbConn;
     let count = await db.collection('TicketsTable').count();
+    let currentdate = new Date();
+    var datetime = currentdate.getDate() + "/"
+    + (currentdate.getMonth() + 1) + "/"
+    + currentdate.getFullYear() + " , "
+    + currentdate.getHours() + ":"
+    + currentdate.getMinutes() + ":"
+    + currentdate.getSeconds();
 
     req.body._id = count + 1;
     //Set MillisecondTimeIn
-    req.body.timeIn = Date.now();
+    req.body.timeIn = currentdate.getTime();
     //Set FormattedTimeIn
     req.body.formattedTimeIn = datetime;
     console.log(req.body);
@@ -299,7 +313,7 @@ app.get('/view-manager', function (req, res) {
 
 app.get('/tickets-sold', function (req, res) {
     dbConn.then(function (db) {
-        var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+        db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
             let customer= 0;
             let resident = 0;
             let employee = 0;
@@ -318,7 +332,8 @@ app.get('/tickets-sold', function (req, res) {
                 };
             });
             let data = [customer, resident, employee];
-            res.send(data)
+            let labels = ["Customer", "Resident", "Employee"]
+            res.send({data, labels})
         });
 
     });
@@ -326,7 +341,7 @@ app.get('/tickets-sold', function (req, res) {
 
 app.get('/insidecarpark', function (req, res) {
     dbConn.then(function (db) {
-        var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+        db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
             carsin =[0,0,0]
 
             feedbacks.forEach(function (arrayItem) {
@@ -363,34 +378,23 @@ app.get('/insidecarpark', function (req, res) {
     });
 });
 
-app.post('/report-timings', function (req, res) {
-    let startReport = req.body.startTime;
-    let endReport = req.body.endTime;
-    res.redirect('manualReport.html')
-    res.send({startReport, endReport})
-
-})
 
 
 app.get('/manual-report', function (req, res) {
-    var startReport;
-    var endReport;
-    fetch('/report-timings').then(function(response){
-        return response.json();
-        }).then(function (data) {
-            startReport = data.startReport;
-            endReport = data.endReport;
-        })
-    console.log(startReport, endReport)
-
+    console.log(req.query)
+    let startReport = new Date(req.query.date +" " + req.query.startTime)
+    let endReport = new Date(req.query.date +" " + req.query.endTime)
+    let timediff = endReport.getHours() - startReport.getHours() +1
     dbConn.then(function (db) {
-        var cursor = db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
-            var custoIn = new Array(endReport.getHours()-startReport.getHours())
-            var residIn = new Array(endReport.getHours()-startReport.getHours())
-            var emploIn = new Array(endReport.getHours()-startReport.getHours())
+        db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+            var custoIn = new Array(timediff).fill(0)
+            var residIn = new Array(timediff).fill(0)
+            var emploIn = new Array(timediff).fill(0)
+
 
             feedbacks.forEach(function (arrayItem) {
-                let customer=false;
+                // console.log(arrayItem)
+                let customer = false;
                 let resident = false;
                 let employee = false;
                 for (const [key, value] of Object.entries(arrayItem)) {
@@ -403,31 +407,34 @@ app.get('/manual-report', function (req, res) {
                             employee = true;
                         }
                     }
-                    if (key == "formattedTimeIn") {
-                        if (value.getDate() == startReport.getDate() && value.getMonth() == startReport.getMonth() ) {
-                            if (value.getHours() >= startReport.getHours() && value.getHours() <= endReport.getHours()) {
-                                if (customer == true) {
-                                    custoIn[value.getHours() - startReport.getHours()-1] +=1
+                    if (key == "timeIn") {
+                        let currentvalue = new Date(value);
+
+                        // currentvalue.setTime(value)
+                        if (currentvalue.getDate() == startReport.getDate() && currentvalue.getMonth() == startReport.getMonth()) {
+
+                            if (currentvalue.getHours() >= startReport.getHours() && currentvalue.getHours() <= endReport.getHours()) {
+
+                                if (customer == true){
+                                    custoIn[currentvalue.getHours() - startReport.getHours()] +=1
                                 } else if (resident == true) {
-                                    residIn[value.getHours() - startReport.getHours()-1] +=1
+                                    residIn[currentvalue.getHours() - startReport.getHours()] += 1
                                 } else if (employee == true) {
-                                    emploIn[value.getHours() - startReport.getHours()-1] +=1
+                                    emploIn[currentvalue.getHours() - startReport.getHours()] += 1
                                 }
                             }
                         }
                     }
                 }
             });
-            var i;
-            let timings = []
-            for (i = startReport.getHours; i < endReport.getHours; i++) {
-                timings[i -startReport.getHours] = i
-            }
-            res.send({custoIn,residIn, emploIn, timings})
-        });
 
+            let timings = []
+            for (let i = startReport.getHours(); i <= endReport.getHours(); i++) {
+                timings[i - startReport.getHours()] = (i + ":00")
+            }
+            res.send({custoIn, residIn, emploIn, timings})
+        });
     });
 });
-
 
 app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');
