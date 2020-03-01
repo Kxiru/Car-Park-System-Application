@@ -5,6 +5,7 @@ var mongodb = require('mongodb');
 var nodemailer = require('nodemailer');
 
 var currentUsername = "";
+var codeToExpect = "";
 
 var currentdate = new Date();
 var datetime = currentdate.getDate() + "/"
@@ -319,7 +320,40 @@ app.post('/sendManagerCodeResetPassword', function(req, res)
             if (feedbacks.length != 0)
             {
                 // generate the code
+                var code = createRecoveryCode();
+                var email = feedbacks[0].Email;
+
                 // send it to the user's email address
+                let transporter = nodemailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 587,
+                        secure: false,
+                        requireTLS: true,
+                        auth: {
+                            user: 'carparksystem.cs1813@gmail.com',
+                            pass: 'snapchat'
+                        }
+                        });
+
+                        var mailContent = "";
+                        mailContent = "We've detected that you've tried to reset your password.\n"
+                        mailContent += "In order for your password to be reset, we need to check if it really is you. Therefore, you need a recovery code to move forward.\n";
+                        mailContent += "Here is your recovery code: " + code + ". ";
+                        let mailOptions = {
+                        from: 'carparksystem.cs1813@gmail.com',
+                        to: email,
+                        subject: 'Reset Password Action Detected',
+                        text: mailContent
+                        };
+
+                        transporter.sendMail(mailOptions, function(error, info){
+                          if (error) console.log(error);
+                          else console.log('Email sent: ' + info.response);
+                    });
+
+                codeToExpect = code;
+                // redirect
+                res.redirect('/CodeResetPasswordPage.html');
             }
             else res.redirect('/ErrorRecoveryCodePage.html');
         });
