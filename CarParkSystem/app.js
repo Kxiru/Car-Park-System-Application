@@ -234,11 +234,15 @@ app.get('/view-hh', function (req, res) {
 
 app.post('/forgotManagerCredentials', function(req, res)
 {
-    dbConn.then(function (db)
-    {
-        if (req.body.length == 0) res.redirect('/ErrorResetPassword.html');
-        db.collection('ManagerTable').find().toArray().then(function (feedbacks)
-        {
+    dbConn.then(function (db) {
+
+        db.collection('ManagerTable').find({ 'Username': req.body.F_Username, 'Password': req.body.F_Email }).toArray().then(function (feedbacks) {
+
+            if (feedbacks.length != 0)
+            {
+                // need to do some checking of the credentials
+            }
+            else res.redirect('/ErrorResetPassword.html');
 
         });
     });
