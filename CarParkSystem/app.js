@@ -7,6 +7,7 @@ var nodemailer = require('nodemailer');
 var currentUsername = "";
 var userToExpect = "";
 var codeToExpect = "";
+var inResetProcess = false;
 
 var currentdate = new Date();
 var datetime = currentdate.getDate() + "/"
@@ -324,6 +325,10 @@ app.post('/sendManagerCodeResetPassword', function(req, res)
                 var code = createRecoveryCode();
                 var email = feedbacks[0].Email;
 
+                codeToExpect = code;
+                userToExpect = req.body.F_Username;
+                inResetProcess = true;
+
                 // send it to the user's email address
                 let transporter = nodemailer.createTransport({
                         host: 'smtp.gmail.com',
@@ -352,8 +357,7 @@ app.post('/sendManagerCodeResetPassword', function(req, res)
                           else console.log('Email sent: ' + info.response);
                     });
 
-                codeToExpect = code;
-                userToExpect = req.body.F_Username;
+
                 // redirect
                 res.redirect('/CodeResetPasswordPage.html');
             }
@@ -367,10 +371,8 @@ app.post('/forgotManagerCredentials', function(req, res)
     dbConn.then(function (db)
     {
         console.log(userToExpect + " " + codeToExpect);
-        if (codeToExpect == req.body.F_Code)
+        if (inResetProcess)
         {
-            userToExpect = "";
-            codeToExpect = "";
             db.collection('ManagerTable').find({ 'Username': userToExpect }).toArray().then(function (feedbacks)
             {
                 if (feedbacks.length != 0)
@@ -428,6 +430,11 @@ app.post('/forgotManagerCredentials', function(req, res)
                               else console.log('Email sent: ' + info.response);
                         });
 
+                     // reset the variables for the reset password process
+                     inResetProcess = false;
+                     userToExpect = "";
+                     codeToExpect = "";
+
                      // redirect
                      res.redirect('/SuccessResetPassword.html');
                 }
@@ -464,7 +471,7 @@ app.post('/view-managerCr', function (req, res)
     console.log(codeToExpect + " " + userToExpect);
     console.log(req.body.name);
 
-    if ((codeToExpect.length > 0) && userToExpect == req.body.name) res.redirect('/LoginAttemptWithResetProcessEnabledPage.html');
+    if (inResetProcess) res.redirect('/LoginAttemptWithResetProcessEnabledPage.html');
     else Login(req, res);
 });
 
