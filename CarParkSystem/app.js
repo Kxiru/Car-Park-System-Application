@@ -311,7 +311,8 @@ app.post('/changePasswordManager', function(req, res){
             }
             catch(error)
             {
-                res.redirect('/ErrorChangePassword');
+                if (currentUsername.length != 0) res.redirect('/ErrorChangePassword');
+                else res.redirect('/NotLoggedInChangePasswordAttempt.html');
             }
         });
     });
