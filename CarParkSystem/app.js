@@ -292,11 +292,15 @@ function createHashPassword()
     return password;
 }
 
+app.post('/sendManagerCodeResetPassword', function(req, res)
+{
+});
+
 app.post('/forgotManagerCredentials', function(req, res)
 {
     dbConn.then(function (db) {
 
-        db.collection('ManagerTable').find({ 'Username': req.body.F_Username, 'Email': req.body.F_Email }).toArray().then(function (feedbacks)
+        db.collection('ManagerTable').find({ 'Username': req.body.F_Username }).toArray().then(function (feedbacks)
         {
             if (feedbacks.length != 0)
             {
@@ -313,7 +317,7 @@ app.post('/forgotManagerCredentials', function(req, res)
                 // m-M-M-M-m-d-M-d-d-d-m-m-M-m-d-d-M-m-d-d
 
                 var usern = req.body.F_Username;
-                var email = req.body.F_Email;
+                var email = feedbacks[0].Email;
 
                 // get the new password
                 var newPass = createHashPassword();
