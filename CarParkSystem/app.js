@@ -292,8 +292,38 @@ function createHashPassword()
     return password;
 }
 
+function createRecoveryCode()
+{
+    var password = "";
+
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+
+    return password;
+}
+
+
 app.post('/sendManagerCodeResetPassword', function(req, res)
 {
+    dbConn.then(function (db) {
+        db.collection('ManagerTable').find({ 'Username': req.body.F_Username }).toArray().then(function (feedbacks)
+        {
+            if (feedbacks.length != 0)
+            {
+                // generate the code
+                // send it to the user's email address
+            }
+            else res.redirect('/ErrorRecoveryCodePage.html');
+        });
+    });
 });
 
 app.post('/forgotManagerCredentials', function(req, res)
