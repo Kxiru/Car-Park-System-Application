@@ -238,7 +238,7 @@ app.post('/view-managerCr', function (req, res) {
         db.collection('ManagerTable').find({ 'Username': req.body.name, 'Password': req.body.password }).toArray().then(function (feedbacks) {
 
             if (feedbacks.length != 0) res.redirect('/managerLanding.html')
-            else res.redirect('managerlogin.html');
+            else res.redirect('/WrongManagerCredentials.html');
 
         });
     });
