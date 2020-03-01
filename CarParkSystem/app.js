@@ -256,28 +256,36 @@ function getRandomNonUppercaseLetter_ASCII()
     return chr;
 }
 
+function getRandomLetter_ASCII()
+{
+    // this is to prevent the hash being easily cracked
+    var x = Math.floor(Math.random() * Math.floor(2));
+    if (x == 1) return getRandomNonUppercaseLetter_ASCII();
+    return getRandomUppercaseLetter_ASCII();
+}
+
 function createHashPassword()
 {
     var password = "";
 
-    password += getRandomNonUppercaseLetter_ASCII();
-    password += getRandomUppercaseLetter_ASCII();
-    password += getRandomUppercaseLetter_ASCII();
-    password += getRandomUppercaseLetter_ASCII();
-    password += getRandomNonUppercaseLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
     password += getRandomDigit_ASCII();
-    password += getRandomUppercaseLetter_ASCII();
-    password += getRandomDigit_ASCII();
-    password += getRandomDigit_ASCII();
-    password += getRandomDigit_ASCII();
-    password += getRandomNonUppercaseLetter_ASCII();
-    password += getRandomNonUppercaseLetter_ASCII();
-    password += getRandomUppercaseLetter_ASCII();
-    password += getRandomNonUppercaseLetter_ASCII();
+    password += getRandomLetter_ASCII();
     password += getRandomDigit_ASCII();
     password += getRandomDigit_ASCII();
-    password += getRandomUppercaseLetter_ASCII();
-    password += getRandomNonUppercaseLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
     password += getRandomDigit_ASCII();
     password += getRandomDigit_ASCII();
     // in total, 20 characters
