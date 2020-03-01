@@ -290,7 +290,6 @@ app.post('/forgotManagerCredentials', function(req, res)
 
         db.collection('ManagerTable').find({ 'Username': req.body.F_Username, 'Email': req.body.F_Email }).toArray().then(function (feedbacks)
         {
-            console.log(req.body.F_Username + " " + req.body.F_Email);
             if (feedbacks.length != 0)
             {
                 // need to do some checking of the credentials
@@ -304,7 +303,25 @@ app.post('/forgotManagerCredentials', function(req, res)
                 // d - digit - char 48-->57
                 // the password will be of length 20
                 // m-M-M-M-m-d-M-d-d-d-m-m-M-m-d-d-M-m-d-d
-                console.log(createHashPassword());
+
+                var usern = req.body.F_Username;
+                var email = req.body.F_Email;
+
+                // get the new password
+                var newPass = createHashPassword();
+
+                // update the query
+                db.collection('ManagerTable').update(
+                        { Username: usern, Email: email},
+                        { $set: { 'Password': newPass } }
+                    );
+
+                // send email to user
+
+                console.log(newPass);
+
+                 // redirect
+                 res.redirect('/SuccessResetPassword.html');
             }
             else res.redirect('/ErrorResetPassword.html');
         });
