@@ -244,8 +244,7 @@ app.post('/post-manager', function (req, res) {
 
 });
 
-app.post('/changePasswordManager', function(req, res)
-{
+app.post('/changePasswordManager', function(req, res){
     dbConn.then(function(db)
     {
         db.collection('ManagerTable').find({'Username': currentUsername, 'Password': req.body.CurrentPass}).toArray().then(function (feedbacks)
@@ -288,6 +287,8 @@ app.post('/changePasswordManager', function(req, res)
                       if (error) console.log(error);
                       else console.log('Email sent: ' + info.response);
                 });
+
+                res.redirect('/SuccessChangePassword.html');
             }
             else res.redirect('/ErrorChangePassword.html');
         });
