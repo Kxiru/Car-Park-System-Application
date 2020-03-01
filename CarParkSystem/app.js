@@ -236,7 +236,11 @@ app.post('/forgotManagerCredentials', function(req, res)
 {
     dbConn.then(function (db)
     {
-        if (req.body.length == 0) console.log("nothing");
+        if (req.body.length == 0) res.redirect('/ErrorResetPassword.html');
+        db.collection('ManagerTable').find().toArray().then(function (feedbacks)
+        {
+
+        });
     });
 
 });
