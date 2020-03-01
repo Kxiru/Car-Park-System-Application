@@ -366,9 +366,9 @@ app.post('/forgotManagerCredentials', function(req, res)
 {
     dbConn.then(function (db) {
 
-        if (userToExpect.length != 0 && codeToExpect != 0)
+        if (userToExpect.length != 0 && codeToExpect == req.body.F_Code)
         {
-            db.collection('ManagerTable').find({ 'Username': req.body.F_Username }).toArray().then(function (feedbacks)
+            db.collection('ManagerTable').find({ 'Username': userToExpect }).toArray().then(function (feedbacks)
             {
                 if (feedbacks.length != 0)
                 {
@@ -384,7 +384,7 @@ app.post('/forgotManagerCredentials', function(req, res)
                     // the password will be of length 20
                     // m-M-M-M-m-d-M-d-d-d-m-m-M-m-d-d-M-m-d-d
 
-                    var usern = req.body.F_Username;
+                    var usern = userToExpect;
                     var email = feedbacks[0].Email;
 
                     // get the new password
@@ -443,6 +443,9 @@ app.post('/view-managerCr', function (req, res) {
 
             if (feedbacks.length != 0)
             {
+                codeToExpect = "";
+                userToExpect = "";
+
                 currentUsername = req.body.name;
                 res.redirect('/managerLanding.html');
             }
