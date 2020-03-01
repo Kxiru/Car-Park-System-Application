@@ -5,6 +5,8 @@ var mongodb = require('mongodb');
 var nodemailer = require('nodemailer');
 
 var currentUsername = "";
+var userToExpect = "";
+var codeToExpect = "";
 
 var currentdate = new Date();
 var datetime = currentdate.getDate() + "/"
@@ -292,40 +294,37 @@ function createHashPassword()
     return password;
 }
 
-app.post('/forgotManagerCredentials', function(req, res)
+function createRecoveryCode()
+{
+    var password = "";
+
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+    password += getRandomLetter_ASCII();
+    password += getRandomDigit_ASCII();
+
+    return password;
+}
+
+
+app.post('/sendManagerCodeResetPassword', function(req, res)
 {
     dbConn.then(function (db) {
-
-        db.collection('ManagerTable').find({ 'Username': req.body.F_Username, 'Email': req.body.F_Email }).toArray().then(function (feedbacks)
+        db.collection('ManagerTable').find({ 'Username': req.body.F_Username }).toArray().then(function (feedbacks)
         {
             if (feedbacks.length != 0)
             {
-                // need to do some checking of the credentials
-                // 1. create a proper hash to change the password with
-                // 2. change the password
-                // 3. send the password via email
+                // generate the code
+                var code = createRecoveryCode();
+                var email = feedbacks[0].Email;
 
-                // i'll make my own hash for the new password instead of using an app
-                // m - non-uppercase character - char 97-->120
-                // M - uppercase character - char 65-->90
-                // d - digit - char 48-->57
-                // the password will be of length 20
-                // m-M-M-M-m-d-M-d-d-d-m-m-M-m-d-d-M-m-d-d
-
-                var usern = req.body.F_Username;
-                var email = req.body.F_Email;
-
-                // get the new password
-                var newPass = createHashPassword();
-
-                // update the query
-                db.collection('ManagerTable').update(
-                        { Username: usern, Email: email},
-                        { $set: { 'Password': newPass } }
-                    );
-
-                // send email to user
-
+                // send it to the user's email address
                 let transporter = nodemailer.createTransport({
                         host: 'smtp.gmail.com',
                         port: 587,
@@ -339,8 +338,8 @@ app.post('/forgotManagerCredentials', function(req, res)
 
                         var mailContent = "";
                         mailContent = "We've detected that you've tried to reset your password.\n"
-                        mailContent += "You can enter this password into the login page and change it afterwards.\n";
-                        mailContent += "Here is your new password: " + newPass + ". ";
+                        mailContent += "In order for your password to be reset, we need to check if it really is you. Therefore, you need a recovery code to move forward.\n";
+                        mailContent += "Here is your recovery code: " + code + ". ";
                         let mailOptions = {
                         from: 'carparksystem.cs1813@gmail.com',
                         to: email,
@@ -353,11 +352,86 @@ app.post('/forgotManagerCredentials', function(req, res)
                           else console.log('Email sent: ' + info.response);
                     });
 
-                 // redirect
-                 res.redirect('/SuccessResetPassword.html');
+                codeToExpect = code;
+                userToExpect = req.body.F_Username;
+                // redirect
+                res.redirect('/CodeResetPasswordPage.html');
             }
-            else res.redirect('/ErrorResetPassword.html');
+            else res.redirect('/ErrorRecoveryCodePage.html');
         });
+    });
+});
+
+app.post('/forgotManagerCredentials', function(req, res)
+{
+    dbConn.then(function (db) {
+
+        if (userToExpect.length != 0 && codeToExpect != 0)
+        {
+            db.collection('ManagerTable').find({ 'Username': req.body.F_Username }).toArray().then(function (feedbacks)
+            {
+                if (feedbacks.length != 0)
+                {
+                    // need to do some checking of the credentials
+                    // 1. create a proper hash to change the password with
+                    // 2. change the password
+                    // 3. send the password via email
+
+                    // i'll make my own hash for the new password instead of using an app
+                    // m - non-uppercase character - char 97-->120
+                    // M - uppercase character - char 65-->90
+                    // d - digit - char 48-->57
+                    // the password will be of length 20
+                    // m-M-M-M-m-d-M-d-d-d-m-m-M-m-d-d-M-m-d-d
+
+                    var usern = req.body.F_Username;
+                    var email = feedbacks[0].Email;
+
+                    // get the new password
+                    var newPass = createHashPassword();
+
+                    // update the query
+                    db.collection('ManagerTable').update(
+                            { Username: usern, Email: email},
+                            { $set: { 'Password': newPass } }
+                        );
+
+                    // send email to user
+
+                    let transporter = nodemailer.createTransport({
+                            host: 'smtp.gmail.com',
+                            port: 587,
+                            secure: false,
+                            requireTLS: true,
+                            auth: {
+                                user: 'carparksystem.cs1813@gmail.com',
+                                pass: 'snapchat'
+                            }
+                            });
+
+                            var mailContent = "";
+                            mailContent = "We've detected that you've tried to reset your password.\n"
+                            mailContent += "You can enter this password into the login page and change it afterwards.\n";
+                            mailContent += "Here is your new password: " + newPass + ". ";
+                            let mailOptions = {
+                            from: 'carparksystem.cs1813@gmail.com',
+                            to: email,
+                            subject: 'Reset Password Action Detected',
+                            text: mailContent
+                            };
+
+                            transporter.sendMail(mailOptions, function(error, info){
+                              if (error) console.log(error);
+                              else console.log('Email sent: ' + info.response);
+                        });
+
+                     // redirect
+                     res.redirect('/SuccessResetPassword.html');
+                }
+                else res.redirect('/ErrorResetPassword.html');
+            });
+        }
+        else res.redirect('/NotInRecoveryPasswordPage.html'); // this means that the user tries to redirect to a wrong page.
     });
 
 });
