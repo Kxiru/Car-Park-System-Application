@@ -318,7 +318,32 @@ app.post('/forgotManagerCredentials', function(req, res)
 
                 // send email to user
 
-                console.log(newPass);
+                let transporter = nodemailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 587,
+                        secure: false,
+                        requireTLS: true,
+                        auth: {
+                            user: 'carparksystem.cs1813@gmail.com',
+                            pass: 'snapchat'
+                        }
+                        });
+
+                        var mailContent = "";
+                        mailContent = "We've detected that you've tried to reset your password.\n"
+                        mailContent += "You can enter this password into the login page and change it afterwards.\n";
+                        mailContent += "Here is your new password: " + newPass + ". ";
+                        let mailOptions = {
+                        from: 'carparksystem.cs1813@gmail.com',
+                        to: email,
+                        subject: 'Reset Password Action Detected',
+                        text: mailContent
+                        };
+
+                        transporter.sendMail(mailOptions, function(error, info){
+                          if (error) console.log(error);
+                          else console.log('Email sent: ' + info.response);
+                    });
 
                  // redirect
                  res.redirect('/SuccessResetPassword.html');
