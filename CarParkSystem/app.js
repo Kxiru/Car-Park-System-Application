@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var mongodb = require('mongodb');
 var nodemailer = require('nodemailer');
 
+var currentUsername = "";
 
 var currentdate = new Date();
 var datetime = currentdate.getDate() + "/"

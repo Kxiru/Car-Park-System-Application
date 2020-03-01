@@ -61,7 +61,14 @@ html {
     top: 0.5%;
 }
 
-.grid-title input[type = "button"] {
+.grid-title input[name="changepass"] {
+    position: absolute;
+    right: 20%;
+    float: right;
+    clear: both;
+}
+
+.grid-title input[name="logout"] {
     position: absolute;
     right: 5%;
     float: right;
