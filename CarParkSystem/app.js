@@ -364,10 +364,13 @@ app.post('/sendManagerCodeResetPassword', function(req, res)
 
 app.post('/forgotManagerCredentials', function(req, res)
 {
-    dbConn.then(function (db) {
-
-        if (userToExpect.length != 0 && codeToExpect == req.body.F_Code)
+    dbConn.then(function (db)
+    {
+        console.log(userToExpect + " " + codeToExpect);
+        if (codeToExpect == req.body.F_Code)
         {
+            userToExpect = "";
+            codeToExpect = "";
             db.collection('ManagerTable').find({ 'Username': userToExpect }).toArray().then(function (feedbacks)
             {
                 if (feedbacks.length != 0)
@@ -436,23 +439,33 @@ app.post('/forgotManagerCredentials', function(req, res)
 
 });
 
-app.post('/view-managerCr', function (req, res) {
+function Login(req, res)
+{
     dbConn.then(function (db) {
+            db.collection('ManagerTable').find({ 'Username': req.body.name, 'Password': req.body.password }).toArray().then(function (feedbacks) {
 
-        db.collection('ManagerTable').find({ 'Username': req.body.name, 'Password': req.body.password }).toArray().then(function (feedbacks) {
+                if (feedbacks.length != 0)
+                {
+                    codeToExpect = "";
+                    userToExpect = "";
 
-            if (feedbacks.length != 0)
-            {
-                codeToExpect = "";
-                userToExpect = "";
+                    currentUsername = req.body.name;
+                    res.redirect('/managerLanding.html');
+                }
+                else res.redirect('/WrongManagerCredentials.html');
 
-                currentUsername = req.body.name;
-                res.redirect('/managerLanding.html');
-            }
-            else res.redirect('/WrongManagerCredentials.html');
-
+            });
         });
-    });
+}
+
+
+app.post('/view-managerCr', function (req, res)
+{
+    console.log(codeToExpect + " " + userToExpect);
+    console.log(req.body.name);
+
+    if ((codeToExpect.length > 0) && userToExpect == req.body.name) res.redirect('/LoginAttemptWithResetProcessEnabledPage.html');
+    else Login(req, res);
 });
 
 app.post('/post-manager', function (req, res) {
