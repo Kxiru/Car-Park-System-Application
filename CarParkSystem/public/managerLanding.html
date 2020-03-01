@@ -11,10 +11,9 @@
     <div class="grid-container">
         <div class="grid-title">
             <img class="dash-manager-img" src="css/images/managericon.png" alt="logo">
-            <h3> WELCOME MANAGER </h3>
+            <h3> MANAGER DASHBOARD </h3>
             <input type="button" name="changepass" class="button_active" value="CHANGE PASSWORD" onclick="location.href='changePasswordManager.html';" />
             <input type="button" name="logout" class="button_active" value="LOG OUT" onclick="location.href='Homepage.html';" />
-        
         </div>
         <div class="grid-sidebar">
             <form class="gs-box" action="/post-happyhour" method="POST">
@@ -67,7 +66,60 @@
     <footer id="footer">
         Group 8
     </footer>
+    <script>
+        function ChartInitialise (custoIn, residIn, emploIn, timings){
 
+            let myChart = document.getElementById('myChart').getContext('2d');
+            myChart.canvas.parentNode.style.height = '512px';
+            myChart.canvas.parentNode.style.width = '512px';
+
+
+            let newChart = new Chart(myChart, {
+                type: 'bar',
+                data: {
+                    labels: timings,
+                    datasets: [{
+                        label: 'Customer',
+                        data: custoIn,
+                        backgroundColor: '#3a96f2',
+                        hoverBorderWidth: 6,
+                        hoverBorderColor: '#969696'
+                    }
+                    {
+                        label: 'Resident',
+                        data: residIn,
+                        backgroundColor: '#21C085',
+                        hoverBorderWidth: 6,
+                        hoverBorderColor: '#969696'
+                    }{
+                        label: 'Employee',
+                        data: emploIn,
+                        backgroundColor: '#2166C0',
+                        hoverBorderWidth: 6,
+                        hoverBorderColor: '#969696'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Automatic report',
+                        fontSize: 20
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            },
+
+                            display: true,
+                        }]
+                    }
+
+
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
