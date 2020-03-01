@@ -263,48 +263,56 @@ app.post('/changePasswordManager', function(req, res){
     {
         db.collection('ManagerTable').find({'Username': currentUsername, 'Password': req.body.CurrentPass}).toArray().then(function (feedbacks)
         {
-            var passw = feedbacks[0].Password;
-            var usern = feedbacks[0].Username;
-            var email = feedbacks[0].Email;
-            var currentPass = req.body.CurrentPass;
-            var newPass = req.body.NewPass;
-            var confirmPass = req.body.ConfirmPass;
-
-            if (passw == currentPass && newPass == confirmPass)
+            try
             {
-                db.collection('ManagerTable').update(
-                    { Username: usern },
-                    { $set: { 'Password': newPass } }
-                );
+                var passw = feedbacks[0].Password;
+                var usern = feedbacks[0].Username;
+                var email = feedbacks[0].Email;
+                var currentPass = req.body.CurrentPass;
+                var newPass = req.body.NewPass;
+                var confirmPass = req.body.ConfirmPass;
 
-                // send email as notification
-                let transporter = nodemailer.createTransport({
-                    host: 'smtp.gmail.com',
-                    port: 587,
-                    secure: false,
-                    requireTLS: true,
-                    auth: {
-                        user: 'carparksystem.cs1813@gmail.com',
-                        pass: 'snapchat'
-                    }
+                if (passw == currentPass && newPass == confirmPass && currentUsername == usern)
+                {
+                    db.collection('ManagerTable').update(
+                        { Username: usern },
+                        { $set: { 'Password': newPass } }
+                    );
+
+                    // send email as notification
+                    let transporter = nodemailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 587,
+                        secure: false,
+                        requireTLS: true,
+                        auth: {
+                            user: 'carparksystem.cs1813@gmail.com',
+                            pass: 'snapchat'
+                        }
+                        });
+
+                        var mailContent = "Somebody has changed a password for the following user: " + currentUsername + " . \n If you recognize this action, you can leave this email alone. If not, please let us know by sending a reply to this email.";
+                        let mailOptions = {
+                        from: 'carparksystem.cs1813@gmail.com',
+                        to: email,
+                        subject: 'Change Password Action Detected',
+                        text: mailContent
+                        };
+
+                        transporter.sendMail(mailOptions, function(error, info){
+                          if (error) console.log(error);
+                          else console.log('Email sent: ' + info.response);
                     });
 
-                    var mailContent = "Somebody has changed a password for the following user: " + currentUsername + " . \n If you recognize this action, you can leave this email alone. If not, please let us know by sending a reply to this email.";
-                    let mailOptions = {
-                    from: 'carparksystem.cs1813@gmail.com',
-                    to: email,
-                    subject: 'Change Password Action Detected',
-                    text: mailContent
-                    };
-
-                    transporter.sendMail(mailOptions, function(error, info){
-                      if (error) console.log(error);
-                      else console.log('Email sent: ' + info.response);
-                });
-
-                res.redirect('/SuccessChangePassword.html');
+                    currentUsername = ""; // so that testers cannot jump to this page without the username set up
+                    res.redirect('/SuccessChangePassword.html');
+                }
+                else res.redirect('/ErrorChangePassword.html');
             }
-            else res.redirect('/ErrorChangePassword.html');
+            catch(error)
+            {
+                res.redirect('/ErrorChangePassword');
+            }
         });
     });
 });
