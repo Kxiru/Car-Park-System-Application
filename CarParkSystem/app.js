@@ -250,19 +250,35 @@ app.post('/changePasswordManager', function(req, res)
     {
         db.collection('ManagerTable').find({'Username': currentUsername, 'Password': req.body.CurrentPass}).toArray().then(function (feedbacks)
         {
-            if (feedbacks.length != 0 && req.body.NewPass == req.body.ConfirmPass)
+
+            if (feedbacks.length != 0)
             {
-                //console.log('Current Password' + req.body.CurrentPass);
-                //console.log('New Password: ' + req.body.NewPass);
-                //console.log('Confirmed Password: ' + req.body.ConfirmPass);
+                feedbacks.forEach(function (arrayItem)
+                {
+                    var found = false;
+                    for (const [key, value] of Object.entries(arrayItem)) {
+                        if (key == "Password")
+                        {
+                            //console.log(value);
+                            if (value == req.body.CurrentPass && req.body.NewPass == req.body.ConfirmPass)
+                            {
+                                //console.log('Current Password: ' + req.body.CurrentPass);
+                                //console.log('New Password: ' + req.body.NewPass);
+                                //console.log('Confirmed Password: ' + req.body.ConfirmPass);
 
-                db.collection('ManagerTable').update(
-                    { Username: currentUsername },
-                    { $set: { 'Password': req.body.NewPass } }
-                );
+                                found = true;
 
+                                db.collection('ManagerTable').update(
+                                    { Username: currentUsername },
+                                    { $set: { 'Password': req.body.NewPass } }
+                                );
+                            }
+                        }
+                    };
 
-                res.redirect('/SuccessChangePassword.html');
+                    if (found) res.redirect('/SuccessChangePassword.html');
+                    else res.redirect('/ErrorChangePassword.html');
+                });
             }
             else res.redirect('/ErrorChangePassword.html');
         });
