@@ -232,6 +232,15 @@ app.get('/view-hh', function (req, res) {
 
 /////////// Manager POST and GET requests////////////////////
 
+app.post('/forgotManagerCredentials', function(req, res)
+{
+    dbConn.then(function (db)
+    {
+        if (req.body.length == 0) console.log("nothing");
+    });
+
+});
+
 app.post('/view-managerCr', function (req, res) {
     dbConn.then(function (db) {
 
@@ -247,7 +256,6 @@ app.post('/view-managerCr', function (req, res) {
         });
     });
 });
-
 
 app.post('/post-manager', function (req, res) {
     dbConn.then(function (db) {
