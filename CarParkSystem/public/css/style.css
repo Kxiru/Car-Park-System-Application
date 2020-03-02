@@ -56,24 +56,47 @@ html {
     display: flex;
 }
 
+
+.grid-title input[type = "button"]{
+    border: 0;
+    background: rgba(145,188,201,0.3);
+    display: block;
+    margin: 20px 5px;
+    font-size: 15px;
+    text-align: center;
+    border: 2px solid #91bcc9;
+    width: 200px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.2s;
+
+    position: relative;
+    left: 35%;
+}
+
+.title-buttons {
+    position: relative;
+    max-width: 75%;
+    min-width: 55%;
+    height: 85%;
+    margin: 5px;
+    
+    left: 20%;
+    outline: 1px solid #00c7a2;
+}
+
 .grid-title h3 {
-    position: absolute;
+    position: relative;
     left: 15%;
     top: 0.5%;
+    display: inline-block;
 }
 
-.grid-title input[name="changepass"] {
-    position: absolute;
-    right: 20%;
-    float: right;
-    clear: both;
-}
-
-.grid-title input[name="logout"] {
-    position: absolute;
-    right: 5%;
-    float: right;
-    clear: both;
+.title-buttons input[class="button_active"] {
+    position: relative;
+    display: inline-block;
+    /* width: 100%; */
 }
 
 .grid-sidebar {
@@ -414,7 +437,7 @@ input[type = "number"] {
 
 }
 
-.box input[type = "button"], .grid-title input[type = "button"], .grid-content-a input[type = "button"], .grid-sidebar input[type = "button"] {
+.box input[type = "button"], .grid-content-a input[type = "button"], .grid-sidebar input[type = "button"] {
     border: 0;
     background: rgba(145,188,201,0.3);
     display: block;
@@ -484,7 +507,7 @@ input[type = "number"] {
     background: rgba(0,199,163,0.7);
 }
 
-.box input[type = "button"], .grid-title input[type = "button"], .grid-content-b input[type = "button"], .grid-sidebar input[type = "button"] {
+.box input[type = "button"], .grid-content-b input[type = "button"], .grid-sidebar input[type = "button"] {
     border: 0;
     background: rgba(145,188,201,0.3);
     display: block;

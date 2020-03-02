@@ -13,8 +13,11 @@
         <div class="grid-title">
             <img class="dash-manager-img" src="css/images/managericon.png" alt="logo">
             <h3> MANAGER DASHBOARD </h3>
-            <input type="button" name="changepass" class="button_active" value="CHANGE PASSWORD" onclick="location.href='changePasswordManager.html';" />
-            <input type="button" name="logout" class="button_active" value="LOG OUT" onclick="location.href='Homepage.html';" />
+            <!-- <form class= "title-buttons" action="/checkLoggedin" method="POST"> -->
+                <input type="button" name="title-btn" class="button_active" value="NEW MANAGER" onclick="location.href= 'newManager.html';">
+                <input type="button" name="title-btn" class="button_active" value="CHANGE PASSWORD" onclick="location.href='changePasswordManager.html';" />
+                <input type="button" name="title-btn" class="button_active" value="LOG OUT" onclick="location.href='Homepage.html';" />
+            <!-- </form> -->
         </div>
 
         <div class="grid-sidebar">
@@ -38,19 +41,15 @@
                 CHOOSE REPORT TIME SLOT: <br>
                 <input type="date" name="date">
                 <br>
-
-                <div class = "time-container">
-                    <div class="time-box">
-                        FROM:
-                        <input type="time" name="startTime">
-                    </div>
-                    <div class="time-box">
-                        UNTIL:
-                        <input type="time" name="endTime">
-                    </div>
+                <div class="time-box">
+                    FROM:
+                    <input type="time" name="startTime">
+                </div>
+                <div class="time-box">
+                    UNTIL:
+                    <input type="time" name="endTime">
                 </div>
                 <input type="submit" name="" value="GENERATE REPORT" >
-
             </form>
         </div>
         <script>
@@ -84,7 +83,6 @@
     <footer id="footer">
         Group 8
     </footer>
-
 </body>
 
 </html>
