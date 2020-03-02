@@ -56,6 +56,11 @@ html {
     display: flex;
 }
 
+.title-buttons {
+    width: 100%;
+
+}
+
 .grid-title h3 {
     position: absolute;
     left: 15%;

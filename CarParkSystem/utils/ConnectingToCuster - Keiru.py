@@ -17,7 +17,6 @@ records = my_collection.find()
 for item in records:
     print(item)
 
-
 #////////////////////////////
 # This segment of code refers to how to query data from the database.
 # my_cursor = my_collection.find()
