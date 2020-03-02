@@ -19,7 +19,7 @@ var datetime = currentdate.getDate() + "/"
 
 const backHome = "<input type='submit' formaction='Homepage.html' class='button_active' value='Back to Home'></input>";
 const backMLanding = "<input type='submit' formaction='managerLanding.html' class='button_active' value='BACK TO LANDING'></input>";
-const CSSStyling = "<head> <meta charset='utf-8'> <title>Receipt</title> <link rel='stylesheet' href='css/style.css'> </head>";
+const CSSStyling = "<head> <meta charset='utf-8'> <title>Entry Details</title> <link rel='stylesheet' href='css/style.css'> </head>";
 
 var dbConn = mongodb.MongoClient.connect("mongodb://Admin:admin123@cs1813namedb-shard-00-00-maax9.mongodb.net:27017,cs1813namedb-shard-00-01-maax9.mongodb.net:27017,cs1813namedb-shard-00-02-maax9.mongodb.net:27017/test?ssl=true&replicaSet=CS1813NameDB-shard-0&authSource=admin&retryWrites=true&w=majority/CarParkDatabase");
 
@@ -327,7 +327,7 @@ app.post('/sendManagerCodeResetPassword', function(req, res)
 
                 codeToExpect = code;
                 userToExpect = req.body.F_Username;
-                inResetProcess = true;
+                inResetProcess = true; // this means that the user has started the recovery process. He cannot undo this. He has to complete the process if he wants to log in with the same username.
 
                 // send it to the user's email address
                 let transporter = nodemailer.createTransport({
@@ -353,8 +353,7 @@ app.post('/sendManagerCodeResetPassword', function(req, res)
                         };
 
                         transporter.sendMail(mailOptions, function(error, info){
-                          if (error) console.log(error);
-                          else console.log('Email sent: ' + info.response);
+                          if (!error) console.log('Email sent: ' + info.response);
                     });
 
 
@@ -370,7 +369,6 @@ app.post('/forgotManagerCredentials', function(req, res)
 {
     dbConn.then(function (db)
     {
-        console.log(userToExpect + " " + codeToExpect);
         if (inResetProcess)
         {
             db.collection('ManagerTable').find({ 'Username': userToExpect }).toArray().then(function (feedbacks)
@@ -426,8 +424,7 @@ app.post('/forgotManagerCredentials', function(req, res)
                             };
 
                             transporter.sendMail(mailOptions, function(error, info){
-                              if (error) console.log(error);
-                              else console.log('Email sent: ' + info.response);
+                              if (!error) console.log('Email sent: ' + info.response);
                         });
 
                      // reset the variables for the reset password process
@@ -468,9 +465,6 @@ function Login(req, res)
 
 app.post('/view-managerCr', function (req, res)
 {
-    console.log(codeToExpect + " " + userToExpect);
-    console.log(req.body.name);
-
     if (inResetProcess) res.redirect('/LoginAttemptWithResetProcessEnabledPage.html');
     else Login(req, res);
 });
@@ -526,8 +520,7 @@ app.post('/changePasswordManager', function(req, res){
                         };
 
                         transporter.sendMail(mailOptions, function(error, info){
-                          if (error) console.log(error);
-                          else console.log('Email sent: ' + info.response);
+                          if (!error) console.log('Email sent: ' + info.response);
                     });
 
                     currentUsername = ""; // so that testers cannot jump to this page without the username set up
@@ -556,9 +549,6 @@ app.post('/send-ManagerCr', function (req, res){
     }
     });
 
-    console.log(req.body.Username);
-    console.log(req.body.Password);
-    console.log(req.body.Email);
     var mailContent = "You have been assigned as a new manager! Here are your new credentials:\n" + "Username: " + req.body.Username + "\n" + "Password: " + req.body.Password + "\n";
     let mailOptions = {
     from: 'carparksystem.cs1813@gmail.com',
@@ -568,8 +558,7 @@ app.post('/send-ManagerCr', function (req, res){
     };
 
     transporter.sendMail(mailOptions, function(error, info){
-      if (error) console.log(error);
-      else
+      if (!error)
       {
             dbConn.then(function (db)
             {
@@ -599,6 +588,22 @@ app.get('/view-manager', function (req, res) {
 });
 
 /////////// Chart GET request and draw chart////////////////////
+
+function checkManagerLoggedIn(res, link)
+{
+    if (currentUsername.length != 0) res.redirect(link);
+    else res.redirect('NotLoggedInChangePasswordAttempt.html');
+}
+
+app.post('/seeCarsChart', function(req, res)
+{
+    checkManagerLoggedIn(res, '/carsInside.html'); // if the user is logged in, jump to that page. otherwise, jump to the login page.
+});
+
+app.post('/seeTicketsChart', function(req, res)
+{
+    checkManagerLoggedIn(res, '/numOfTicChart.html'); // if the user is logged in, jump to that page. otherwise, jump to the login page.
+});
 
 app.get('/tickets-sold', function (req, res) {
     dbConn.then(function (db) {
