@@ -477,6 +477,7 @@ function Login(req, res)
                 {
                     codeToExpect = "";
                     userToExpect = "";
+                    inResetProcess = false;
 
                     currentUsername = req.body.name;
                     res.redirect('/managerLanding.html');
@@ -488,19 +489,26 @@ function Login(req, res)
 }
 
 
-app.post('/view-managerCr', function (req, res)
+app.post('/managerLogin', function (req, res)
 {
-    if (inResetProcess) res.redirect('/LoginAttemptWithResetProcessEnabledPage.html');
+    if (inResetProcess)
+    {
+        var page = "<!DOCTYPE html><html lang=" + "en" + "><head><meta charset=" + "'utf-8'>";
+        page += "<title>Cannot Login - Reset Password</title>";
+        page += "<link rel='stylesheet' href='css/style.css'>";
+        page += "</head><body><div><form class=" + "box" + ">";
+        page += "It seems that you have attempted to reset your password. Unfortunately, we cannot let you login to this page unless you complete the process.  <br>";
+        page += "<input type=" + "\"button\"" + "name=" + "\"logout\"" + "class=" + "\"button_active\"" + "value=" + "\"Continue\"" + "onclick=" + "\"location.href='CodeResetPasswordPage.html';\"" + " />";
+        page += "</form></div></body></html>";
+
+        res.send(page);
+    }
     else Login(req, res);
 });
 
 app.post('/post-manager', function (req, res) {
-    dbConn.then(function (db) {
-        //delete req.body._id;
-        db.collection('ManagerTable').insertOne(req.body);
-    });
+    dbConn.then(function (db) { db.collection('ManagerTable').insertOne(req.body); });
     res.send('Manager received:\n' + JSON.stringify(req.body));
-
 });
 
 app.post('/changePasswordManager', function(req, res){
