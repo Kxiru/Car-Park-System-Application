@@ -385,7 +385,16 @@ app.post('/sendManagerCodeResetPassword', function(req, res)
                 // redirect
                 res.redirect('/CodeResetPasswordPage.html');
             }
-            else res.redirect('/ErrorRecoveryCodePage.html');
+            else
+            {
+                var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'><title>Correct Credentials</title>";
+                page += "</head><body><div><form class=\"box\">";
+                page += "Invalid username. Could not process operation. <br>";
+                page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to homepage\" onclick=\"location.href='Homepage.html';\" />";
+                page += "</form></div></body></html>";
+
+                res.send(page);
+            }
         });
     });
 });
