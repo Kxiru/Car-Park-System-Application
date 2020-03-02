@@ -9,12 +9,14 @@
 
 <body>
     <div class="grid-container">
+
         <div class="grid-title">
             <img class="dash-manager-img" src="css/images/managericon.png" alt="logo">
             <h3> MANAGER DASHBOARD </h3>
             <input type="button" name="changepass" class="button_active" value="CHANGE PASSWORD" onclick="location.href='changePasswordManager.html';" />
             <input type="button" name="logout" class="button_active" value="LOG OUT" onclick="location.href='Homepage.html';" />
         </div>
+
         <div class="grid-sidebar">
             <form class="gs-box" action="/post-happyhour" method="POST">
                 <br>
@@ -43,9 +45,9 @@
                 <input type="time" name="endTime"><br>
                 <input type="submit" name="" value="GENERATE REPORT" >
             </form>
-        <form action="/checkLoggedin" method="POST">
-            <input type="button" name="" value="NEW MANAGER" onclick="location.href= 'newManager.html';">
-        </form>
+             <form action="/checkLoggedin" method="POST">
+                <input type="button" name="" value="NEW MANAGER" onclick="location.href= 'newManager.html';">
+            </form>
         </div>
         
         <div class="grid-content-b">
@@ -60,6 +62,7 @@
             <input type="button"  value="VIEW HAPPY HOUR LOG" onclick="location.href='/view-hh';" />
             <br>
         </div>
+
         <br>
     </div>
 

@@ -197,26 +197,51 @@ app.get('/view-tickets', function (req, res) {
 
 /////////// Happy Hour POST and GET requests////////////////////
 
-app.post('/post-happyhour', function (req, res) {
-    (async () => {
-        let db = await dbConn;
-        let count = await db.collection('HappyHourTable').count();
-        req.body._id = count + 1;
-        //Set MillisecondTimeIn
-        req.body.timeSet = Date.now();
-        //Set FormattedTimeIn
-        req.body.formattedTimeSet = datetime;
-        console.log(req.body);
+app.post('/post-happyhour', function(req, res)
+{
+    if (currentUsername.length != 0)
+    {
+        if (req.body.hours.length != 0 && req.body.hours != 0)
+        {
+            dbConn.then(function(db)
+            {
+                var hours = req.body.hours;
+                var timeRegistered = "";
+                var date = new Date();
 
-        feedbackstring = CSSStyling + "<div class='box'><form>";
-        feedbackstring += "<br> Successfuly set happy hour for " + req.body.hours + " hours from now.";
-        feedbackstring += backMLanding + "</div></form>";
+                timeRegistered += (date.getDate() + "/");
+                timeRegistered += (date.getMonth() + "/");
+                timeRegistered += (date.getFullYear() + "   ");
+                timeRegistered += (date.getHours() + ":");
+                timeRegistered += (date.getMinutes() + ":");
+                timeRegistered += (date.getSeconds());
 
-        db.collection('HappyHourTable').insertOne(req.body);
-        res.send(feedbackstring);
-        //res.send('Data received:\n' + JSON.stringify(req.body));
-    })();
+                db.collection('HappyHourTable').insertOne({
+                    NumberOfHours: hours,
+                    TimeRegistered: timeRegistered
+                });
+            });
+
+            // "redirect"
+            var Style = "<head> <meta charset='utf-8'> <title>Happy Hour Registered</title> <link rel='stylesheet' href='css/style.css'> </head>";
+            feedbackstring = Style + "<div class='box'><form>";
+            feedbackstring += "<br> Successfuly set happy hour for " + req.body.hours + " hours from now.";
+            feedbackstring += backMLanding + "</div></form>";
+            res.send(feedbackstring);
+        }
+        else
+        {
+            // can't insert 0 happy hours
+            var Style = "<head> <meta charset='utf-8'> <title>Happy Hour Error</title> <link rel='stylesheet' href='css/style.css'> </head>";
+            feedbackstring = Style + "<div class='box'><form>";
+            feedbackstring += "<br> Operation not valid.";
+            feedbackstring += backMLanding + "</div></form>";
+            res.send(feedbackstring);
+        }
+    }
+    else res.redirect('/NotLoggedInChangePasswordAttempt.html');
 });
+
 app.get('/view-hh', function (req, res) {
     dbConn.then(function (db) {
         db.collection('HappyHourTable').find({}).toArray().then(function (feedbacks) {
