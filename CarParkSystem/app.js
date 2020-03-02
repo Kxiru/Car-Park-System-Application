@@ -179,20 +179,24 @@ app.post('/post-tickets', function (req, res) {
 // res.send('Data received:\n' + JSON.stringify(req.body));
 
 
-app.get('/view-tickets', function (req, res) {
-    dbConn.then(function (db) {
-        db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
-            feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
-            "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
-            feedbackstring += "<h2>TICKET HISTORY</h2> <div class='scroll-box'>";
+app.get('/viewTicketEntries', function (req, res) {
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function (db) {
+            db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+                feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
+                "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
+                feedbackstring += "<h2>TICKET HISTORY</h2> <div class='scroll-box'>";
 
-            for (i = 0; i < feedbacks.length; i++) {
-                feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
-            }
-            feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
-            res.status(200).send(feedbackstring);
+                for (i = 0; i < feedbacks.length; i++) {
+                    feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
+                }
+                feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
+                res.status(200).send(feedbackstring);
+            });
         });
-    });
+    }
+    else res.redirect('/OperationNotValidPage.html');
 });
 
 /////////// Happy Hour POST and GET requests////////////////////
@@ -242,20 +246,24 @@ app.post('/post-happyhour', function(req, res)
     else res.redirect('/OperationNotValidPage.html');
 });
 
-app.get('/view-hh', function (req, res) {
-    dbConn.then(function (db) {
-        db.collection('HappyHourTable').find({}).toArray().then(function (feedbacks) {
-            feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
-            "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
-            feedbackstring += "<h2>HAPPY HOUR LOG</h2> <div class='scroll-box'>";
+app.get('/viewHappyHourEntries', function (req, res) {
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function (db) {
+            db.collection('HappyHourTable').find({}).toArray().then(function (feedbacks) {
+                feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
+                "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
+                feedbackstring += "<h2>HAPPY HOUR LOG</h2> <div class='scroll-box'>";
 
-            for (i = 0; i < feedbacks.length; i++) {
-                feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
-            }
-            feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
-            res.status(200).send(feedbackstring);
+                for (i = 0; i < feedbacks.length; i++) {
+                    feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
+                }
+                feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
+                res.status(200).send(feedbackstring);
+            });
         });
-    });
+    }
+    else res.redirect('/OperationNotValidPage.html');
 });
 
 /////////// Manager POST and GET requests////////////////////
@@ -695,20 +703,24 @@ app.post('/send-ManagerCr', function (req, res){
     else res.redirect('/OperationNotValidPage.html');
 });
 
-app.get('/view-manager', function (req, res) {
-    dbConn.then(function (db) {
-        db.collection('ManagerTable').find({}).toArray().then(function (feedbacks) {
+app.get('/viewManagerEntries', function (req, res) {
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function (db) {
+            db.collection('ManagerTable').find({}).toArray().then(function (feedbacks) {
 
-            feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
-            "<img class='mainicon' src='css/images/managericon.png' alt='logo'>";
-            feedbackstring += "<h2>MANAGERS TABLE</h2> <div class='scroll-box'>";
-            for (i = 0; i < feedbacks.length; i++) {
-                feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
-            }
-            feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
-            res.status(200).send(feedbackstring);
+                feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
+                "<img class='mainicon' src='css/images/managericon.png' alt='logo'>";
+                feedbackstring += "<h2>MANAGERS TABLE</h2> <div class='scroll-box'>";
+                for (i = 0; i < feedbacks.length; i++) {
+                    feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
+                }
+                feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
+                res.status(200).send(feedbackstring);
+            });
         });
-    });
+    }
+    else res.redirect('/OperationNotValidPage.html');
 });
 
 /////////// Chart GET request and draw chart////////////////////
