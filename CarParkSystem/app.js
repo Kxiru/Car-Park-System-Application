@@ -7,6 +7,8 @@ var nodemailer = require('nodemailer');
 var currentUsername = "";
 var userToExpect = "";
 var codeToExpect = "";
+var codeToExpect_NewManager = "";
+var codeToExpect_ChangePassword = "";
 var inResetProcess = false;
 
 var currentdate = new Date();
@@ -24,7 +26,7 @@ const CSSStyling = "<head> <meta charset='utf-8'> <title>Entry Details</title> <
 var dbConn = mongodb.MongoClient.connect("mongodb://Admin:admin123@cs1813namedb-shard-00-00-maax9.mongodb.net:27017,cs1813namedb-shard-00-01-maax9.mongodb.net:27017,cs1813namedb-shard-00-02-maax9.mongodb.net:27017/test?ssl=true&replicaSet=CS1813NameDB-shard-0&authSource=admin&retryWrites=true&w=majority/CarParkDatabase");
 
 dbConn.then(() => {
-    console.log("Successfully connected to server."); // Open localhost:3000
+    console.log("Successfully connected to server. // Open localhost:3000 in your favourite browser!");
 }).catch(e => console.log(e));
 
 var app = express();
@@ -554,77 +556,76 @@ app.post('/post-manager', function (req, res) {
 });
 
 app.post('/changePasswordManager', function(req, res){
-    dbConn.then(function(db)
+    if (currentUsername.length != 0)
     {
-        db.collection('ManagerTable').find({'Username': currentUsername, 'Password': req.body.CurrentPass}).toArray().then(function (feedbacks)
+        dbConn.then(function(db)
         {
-            try
+            if (req.body.CurrentPass.length != 0 && req.body.NewPass.length != 0 && req.body.ConfirmPass.length != 0)
             {
-                var passw = feedbacks[0].Password;
-                var usern = feedbacks[0].Username;
-                var email = feedbacks[0].Email;
-                var currentPass = req.body.CurrentPass;
-                var newPass = req.body.NewPass;
-                var confirmPass = req.body.ConfirmPass;
-
-                if (passw == currentPass && newPass == confirmPass && currentUsername == usern)
+                db.collection('ManagerTable').find({'Username': currentUsername, 'Password': req.body.CurrentPass}).toArray().then(function (feedbacks)
                 {
-                    db.collection('ManagerTable').update(
-                        { Username: usern },
-                        { $set: { 'Password': newPass } }
-                    );
+                    if ((req.body.NewPass == req.body.ConfirmPass) && (feedbacks[0].Password == req.body.CurrentPass))
+                    {
+                        var passw = feedbacks[0].Password;
+                        var usern = feedbacks[0].Username;
+                        var email = feedbacks[0].Email;
+                        var currentPass = req.body.CurrentPass;
+                        var newPass = req.body.NewPass;
+                        var confirmPass = req.body.ConfirmPass;
 
-                    // send email as notification
-                    var mailContent = "We've detected that you've tried to reset your password.\nIf you recognize this action, you can leave this email alone. Otherwise, please reply to this email and let us know.";
-                    var subject = 'Reset Password Action Detected';
-                    sendEmail(res, email, subject, mailContent);
+                        db.collection('ManagerTable').update(
+                            { Username: usern },
+                            { $set: { 'Password': newPass } }
+                        );
 
-                    currentUsername = ""; // so that testers cannot jump to this page without the username set up
+                        // send email as notification
+                        var mailContent = "We've detected that you've tried to reset your password.\nIf you recognize this action, you can leave this email alone. Otherwise, please reply to this email and let us know.";
+                        var subject = 'Reset Password Action Detected';
+                        sendEmail(res, email, subject, mailContent);
 
-                    // redirect
-                    var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
-                    page += "<title>Password Change Successful</title>";
-                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
-                    page += "</head><body><div><form class=\"box\">";
-                    page += "Successful operation. <br> Please relogin with your new password.<br>";
-                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to Login\" onclick=\"location.href='managerlogin.html';\" />";
-                    page += "</form></div></body></html>";
+                        currentUsername = ""; // so that testers cannot jump to this page without the username set up
+                        codeToExpect_ChangePassword = "";
 
-                    res.send(page);
-                }
-                else
-                {
-                    // redirect to a page where you let the user know that the password change operation has failed
-                    var page = "<!DOCTYPE html><html lang=\"en\"><head>";
-                    page += "<meta charset=\'utf-8\'><title>Password Change Failed</title>";
-                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
-                    page += "</head><body><div class=\"box\"><form>";
-                    page += "Unsuccessful operation.<br>Try again.";
-                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Go Back\" onclick=\"location.href='changePasswordManager.html';\" />";
-                    page += "</form></div></body></html>";
+                        // redirect
+                        var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
+                        page += "<title>Password Change Successful</title>";
+                        page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                        page += "</head><body><div><form class=\"box\">";
+                        page += "Successful operation. <br> Please relogin with your new password.<br>";
+                        page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to Login\" onclick=\"location.href='managerlogin.html';\" />";
+                        page += "</form></div></body></html>";
 
-                    res.redirect(page);
-                }
+                        res.send(page);
+                    }
+                    else
+                    {
+                        var page = "<!DOCTYPE html><html lang=\"en\"><head>";
+                        page += "<meta charset=\'utf-8\'><title>Operation failed</title>";
+                        page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                        page += "</head><body><div class=\"box\"><form>";
+                        page += "Unsuccessful operation.<br>Try again.";
+                        page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Go Back\" onclick=\"location.href='/changePasswordManager.html';\" />";
+                        page += "</form></div></body></html>";
+
+                        res.send(page);
+                    }
+                });
             }
-            catch(error)
+            else
             {
-                if (currentUsername.length != 0)
-                {
-                    // redirect to a page where you let the user know that the password change operation has failed
-                    var page = "<!DOCTYPE html><html lang=\"en\"><head>";
-                    page += "<meta charset=\'utf-8\'><title>Password Change Failed</title>";
-                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
-                    page += "</head><body><div class=\"box\"><form>";
-                    page += "Unsuccessful operation.<br>Try again.";
-                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Go Back\" onclick=\"location.href='changePasswordManager.html';\" />";
-                    page += "</form></div></body></html>";
+                var page = "<!DOCTYPE html><html lang=\"en\"><head>";
+                page += "<meta charset=\'utf-8\'><title>Operation failed</title>";
+                page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                page += "</head><body><div class=\"box\"><form>";
+                page += "Unsuccessful operation.<br>Try again.";
+                page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Go Back\" onclick=\"location.href='/changePasswordManager.html';\" />";
+                page += "</form></div></body></html>";
 
-                    res.redirect(page);
-                }
-                else res.redirect('/OperationNotValidPage.html');
+                res.send(page);
             }
         });
-    });
+    }
+    else res.redirect('/OperationNotValidPage.html');
 });
 
 app.post('/checkVerificationCode_NewManager', function(req, res)
@@ -643,7 +644,7 @@ app.post('/checkVerificationCode_NewManager', function(req, res)
             page += "<title>Enter recovery code</title><link rel=\"stylesheet\" href=\"css/style.css\"></head>";
             page += "<body><form class=\"box\">";
             page += "<br> Could not continue operation. Wrong verification code. <br> Try again.";
-            page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href='CodeResetPasswordPage.html';\" />";
+            page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href='CodeVerificationPage_NewManager.html';\" />";
             page += "</form></body><footer id=\"footer\">Group 8</footer></html>";
 
             res.send(page);
@@ -670,8 +671,8 @@ app.get('/startNewManagerProcess', function(req, res)
                 var email = feedbacks[0].Email;
 
                 // send the code on email
-                var subject = "Verification Code for Password Change";
-                var mailContent = "We've detected that you are trying to change your password\n";
+                var subject = "Verification Code for New Manager";
+                var mailContent = "We've detected that you are trying to create a new manager.\n";
                 mailContent += "We've started a short verification process and we've sent you a verification code below.\n";
                 mailContent += "Here it is: " + code + ".\n";
                 mailContent += "\nIf you do not recognize this action, please reply to this email immediately.";
@@ -679,16 +680,67 @@ app.get('/startNewManagerProcess', function(req, res)
                 sendEmail(res, email, subject, mailContent);
 
                 // redirect to page
-                var page = "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta charset=\"utf-8\">";
-                page += "<title>Enter recovery code</title><link rel=\"stylesheet\" href=\"css/style.css\"></head>";
-                page += "<body><form class=\"box\" action=\"/checkVerificationCode_NewManager\" method=\"POST\">";
-                page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href=\'CodeResetPasswordPage.html\';\" />";
-                page += "<br>Enter the code you received on your email.<input type=\"password\" name=\"F_Code\">";
-                page += "<br><form>";
-                page += "<input type=\"submit\" class=\"button_active\" value=\"CONTINUE\" onclick=\"location.href='newManager.html';\" />";
-                page += "</form></body><footer id=\"footer\">Group 8</footer></html>";
+                res.redirect('/CodeVerificationPage_NewManager.html');
+            });
+        });
+    }
+    else res.redirect('/OperationNotValidPage.html');
+});
 
-                res.send(page);
+app.post('/checkVerificationCode_ChangePassword', function(req, res)
+{
+    if (currentUsername.length != 0)
+    {
+        if (codeToExpect_ChangePassword == req.body.F_Code)
+        {
+            codeToExpect_ChangePassword = ""; // I am done with the verification. No need to keep the code.
+            res.redirect('/changePasswordManager.html');
+        }
+        else
+        {
+            console.log(req.body.F_Code);
+            var page = "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta charset=\"utf-8\">";
+            page += "<title>Enter recovery code</title><link rel=\"stylesheet\" href=\"css/style.css\"></head>";
+            page += "<body><form class=\"box\">";
+            page += "<br> Could not continue operation. Wrong verification code. <br> Try again.";
+            page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href='CodeVerificationPage_ChangePassword.html';\" />";
+            page += "</form></body><footer id=\"footer\">Group 8</footer></html>";
+
+            res.send(page);
+        }
+    }
+    else res.redirect('/OperationNodValidPage.html');
+});
+
+app.get('/startChangePasswordManager', function(req, res)
+{
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function(db)
+        {
+            db.collection('ManagerTable').find({'Username': currentUsername}).toArray().then(function (feedbacks)
+            {
+                // get the code
+                var code = createRecoveryCode();
+
+                // set the code to expect
+                codeToExpect_ChangePassword = code;
+
+                // get the email address
+                var email = feedbacks[0].Email;
+
+                // send the code on email
+                var subject = "Verification Code for Change Password";
+                var mailContent = "We've detected that you are trying to change a password on your account.\n";
+                mailContent += "We've started a short verification process and we've sent you a verification code below.\n";
+                mailContent += "Here it is: " + code + ".\n";
+                mailContent += "\nIf you do not recognize this action, please reply to this email immediately.";
+
+                sendEmail(res, email, subject, mailContent);
+
+                // redirect to page
+
+                res.redirect('/CodeVerificationPage_ChangePassword.html');
             });
         });
     }
@@ -698,28 +750,44 @@ app.get('/startNewManagerProcess', function(req, res)
 app.post('/sendManagerCredentials', function (req, res){
     if (currentUsername.length != 0)
     {
-        // send notification email
-        var mailContent = "You have been assigned as a new manager! Here are your new credentials:\n" + "Username: " + req.body.Username + "\n" + "Password: " + req.body.Password + "\n";
-        var email = req.body.Email;
-        var subject = 'New Manager Car Park Credentials';
-
-        sendEmail(res, email, subject, mailContent);
-
-        // add new manager to the database
-        dbConn.then(function (db)
+        if ((req.body.Username.length != 0 && req.body.Password.length != 0 && req.body.Email.length != 0))
         {
-            db.collection('ManagerTable').insertOne(req.body);
-        });
+            // send notification email
+            var mailContent = "You have been assigned as a new manager! Here are your new credentials:\n" + "Username: " + req.body.Username + "\n" + "Password: " + req.body.Password + "\n";
+            var email = req.body.Email;
+            var subject = 'New Manager Car Park Credentials';
 
-        // redirect
-        var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
-        page += "<title>Operation failed</title><link rel=\'stylesheet\' href=\'css/style.css\'>";
-        page += "</head><body><div class=\"box\"><form>";
-        page += "New manager added.<br>An email has been sent to the destination with the credentials you specified.";
-        page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"BACK TO LANDING\" onclick=\"location.href=\'managerLanding.html\';\" />";
-        page += "</form></div></body></html>";
+            sendEmail(res, email, subject, mailContent);
 
-        res.send(page);
+            // add new manager to the database
+            dbConn.then(function (db)
+            {
+                db.collection('ManagerTable').insertOne(req.body);
+            });
+
+            // redirect
+            var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
+            page += "<title>Operation failed</title><link rel=\'stylesheet\' href=\'css/style.css\'>";
+            page += "</head><body><div class=\"box\"><form>";
+            page += "New manager added.<br>An email has been sent to the destination with the credentials you specified.";
+            page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"BACK TO LANDING\" onclick=\"location.href=\'managerLanding.html\';\" />";
+            page += "</form></div></body></html>";
+
+            res.send(page);
+        }
+        else
+        {
+            var page = "<!DOCTYPE html><html lang=\"en\"><head>";
+            page += "<meta charset=\'utf-8\'><title>Operation failed</title>";
+            page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+            page += "</head><body><div class=\"box\"><form>";
+            page += "Unsuccessful operation.<br>Try again.";
+            page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Go Back\" onclick=\"location.href='/newManager.html';\" />";
+            page += "</form></div></body></html>";
+
+            res.send(page);
+        }
+
     }
     else res.redirect('/OperationNotValidPage.html');
 });
