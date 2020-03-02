@@ -7,6 +7,8 @@ var nodemailer = require('nodemailer');
 var currentUsername = "";
 var userToExpect = "";
 var codeToExpect = "";
+var codeToExpect_NewManager = "";
+var codeToExpect_ChangePassword = "";
 var inResetProcess = false;
 
 var currentdate = new Date();
@@ -670,8 +672,8 @@ app.get('/startNewManagerProcess', function(req, res)
                 var email = feedbacks[0].Email;
 
                 // send the code on email
-                var subject = "Verification Code for Password Change";
-                var mailContent = "We've detected that you are trying to change your password\n";
+                var subject = "Verification Code for New Manager";
+                var mailContent = "We've detected that you are trying to create a new manager.\n";
                 mailContent += "We've started a short verification process and we've sent you a verification code below.\n";
                 mailContent += "Here it is: " + code + ".\n";
                 mailContent += "\nIf you do not recognize this action, please reply to this email immediately.";
@@ -682,6 +684,51 @@ app.get('/startNewManagerProcess', function(req, res)
                 var page = "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta charset=\"utf-8\">";
                 page += "<title>Enter recovery code</title><link rel=\"stylesheet\" href=\"css/style.css\"></head>";
                 page += "<body><form class=\"box\" action=\"/checkVerificationCode_NewManager\" method=\"POST\">";
+                page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href=\'CodeResetPasswordPage.html\';\" />";
+                page += "<br>Enter the code you received on your email.<input type=\"password\" name=\"F_Code\">";
+                page += "<br><form>";
+                page += "<input type=\"submit\" class=\"button_active\" value=\"CONTINUE\" onclick=\"location.href='newManager.html';\" />";
+                page += "</form></body><footer id=\"footer\">Group 8</footer></html>";
+
+                res.send(page);
+            });
+        });
+    }
+    else res.redirect('/OperationNotValidPage.html');
+});
+
+app.post('/startChangePasswordManager', function(req, res)
+{
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function(db)
+        {
+            db.collection('ManagerTable').find({'Username': currentUsername}).toArray().then(function (feedbacks)
+            {
+                // get the code
+                var code = createRecoveryCode();
+
+                // set the code to expect
+                codeToExpect_ChangePassword = code;
+
+                // get the email address
+                var email = feedbacks[0].Email;
+
+                // send the code on email
+                var subject = "Verification Code for Change Password";
+                var mailContent = "We've detected that you are trying to change a password on your account.\n";
+                mailContent += "We've started a short verification process and we've sent you a verification code below.\n";
+                mailContent += "Here it is: " + code + ".\n";
+                mailContent += "\nIf you do not recognize this action, please reply to this email immediately.";
+
+                sendEmail(res, email, subject, mailContent);
+
+                // redirect to page
+                var page = "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta charset=\"utf-8\">";
+                page += "<title>Enter recovery code</title><link rel=\"stylesheet\" href=\"css/style.css\"></head>";
+
+                page += "<body><form class=\"box\" action=\"/checkVerificationCode_NewManager\" method=\"POST\">";
+                
                 page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href=\'CodeResetPasswordPage.html\';\" />";
                 page += "<br>Enter the code you received on your email.<input type=\"password\" name=\"F_Code\">";
                 page += "<br><form>";
