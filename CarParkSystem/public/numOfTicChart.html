@@ -51,9 +51,20 @@
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true
-                            },
 
-                            display: true,
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Number of Cars',
+                                fontStyle: 'bold'
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Customer types',
+                                fontStyle: 'bold'
+                            }
                         }]
                     }
                 }
