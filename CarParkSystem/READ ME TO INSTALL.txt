@@ -1,0 +1,17 @@
+Hi there!
+
+Thank you for choosing our Car Park Database System. We are thrilled that we can bring some service to your company!
+Please note the following before installation:
+
+The Default Manager Login Credentials are: -------------------
+Username: tester
+Password: tester123
+
+If asked, your email address is: cs1813_tester@mailinator.com
+
+We encourage you to create a new manager for safety reasons.
+
+
+
+INSTALLATION--------------------------------------------------
+1) Please Un-zip the file into 

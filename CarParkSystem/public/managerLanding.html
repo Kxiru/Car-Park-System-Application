@@ -13,11 +13,11 @@
         <div class="grid-title">
             <img class="dash-manager-img" src="css/images/managericon.png" alt="logo">
             <h3> MANAGER DASHBOARD </h3>
-            <!-- <form class= "title-buttons" action="/checkLoggedin" method="POST"> -->
-                <input type="button" name="title-btn" class="button_active" value="NEW MANAGER" onclick="location.href= 'newManager.html';">
-                <input type="button" name="title-btn" class="button_active" value="CHANGE PASSWORD" onclick="location.href='changePasswordManager.html';" />
-                <input type="button" name="title-btn" class="button_active" value="LOG OUT" onclick="location.href='Homepage.html';" />
-            <!-- </form> -->
+            <div class="title-buttons">
+                <input type="button" class="button_active" name="" value="NEW MANAGER" onclick="location.href= '/startNewManagerProcess';">
+                <input type="button" class="button_active" name="changepass" class="button_active" value="CHANGE PASSWORD" onclick="location.href='/startChangePasswordManager';" />
+                <input type="button" class="button_active" name="logout" class="button_active" value="LOG OUT" onclick="location.href='Homepage.html';" />
+            </div>
         </div>
 
         <div class="grid-sidebar">

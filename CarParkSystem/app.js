@@ -7,6 +7,8 @@ var nodemailer = require('nodemailer');
 var currentUsername = "";
 var userToExpect = "";
 var codeToExpect = "";
+var codeToExpect_NewManager = "";
+var codeToExpect_ChangePassword = "";
 var inResetProcess = false;
 
 var currentdate = new Date();
@@ -124,6 +126,7 @@ function sendEmail(res, address, subj, content)
 
     transporter.sendMail(mailOptions, function(error, info){
       if (!error) console.log('Email sent: ' + info.response);
+      else console.log(error);
 });
 }
 
@@ -626,30 +629,144 @@ app.post('/changePasswordManager', function(req, res){
     });
 });
 
-app.post('/checkLoggedin', function(req, res)
+app.post('/checkVerificationCode_NewManager', function(req, res)
 {
-    checkManagerLoggedIn(res, '/newManager.html');
-});
-
-app.post('/send-ManagerCr', function (req, res){
     if (currentUsername.length != 0)
     {
+        if (codeToExpect_NewManager == req.body.F_Code)
+        {
+            codeToExpect_NewManager = ""; // I am done with the verification. No need to keep the code.
+            res.redirect('/newManager.html');
+        }
+        else
+        {
+            console.log(req.body.F_Code);
+            var page = "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta charset=\"utf-8\">";
+            page += "<title>Enter recovery code</title><link rel=\"stylesheet\" href=\"css/style.css\"></head>";
+            page += "<body><form class=\"box\">";
+            page += "<br> Could not continue operation. Wrong verification code. <br> Try again.";
+            page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href='CodeResetPasswordPage.html';\" />";
+            page += "</form></body><footer id=\"footer\">Group 8</footer></html>";
+
+            res.send(page);
+        }
+    }
+    else res.redirect('/OperationNodValidPage.html');
+});
+
+app.get('/startNewManagerProcess', function(req, res)
+{
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function(db)
+        {
+            db.collection('ManagerTable').find({'Username': currentUsername}).toArray().then(function (feedbacks)
+            {
+                // get the code
+                var code = createRecoveryCode();
+
+                // set the code to expect
+                codeToExpect_NewManager = code;
+
+                // get the email address
+                var email = feedbacks[0].Email;
+
+                // send the code on email
+                var subject = "Verification Code for New Manager";
+                var mailContent = "We've detected that you are trying to create a new manager.\n";
+                mailContent += "We've started a short verification process and we've sent you a verification code below.\n";
+                mailContent += "Here it is: " + code + ".\n";
+                mailContent += "\nIf you do not recognize this action, please reply to this email immediately.";
+
+                sendEmail(res, email, subject, mailContent);
+
+                // redirect to page
+                var page = "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta charset=\"utf-8\">";
+                page += "<title>Enter recovery code</title><link rel=\"stylesheet\" href=\"css/style.css\"></head>";
+                page += "<body><form class=\"box\" action=\"/checkVerificationCode_NewManager\" method=\"POST\">";
+                page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href=\'CodeResetPasswordPage.html\';\" />";
+                page += "<br>Enter the code you received on your email.<input type=\"password\" name=\"F_Code\">";
+                page += "<br><form>";
+                page += "<input type=\"submit\" class=\"button_active\" value=\"CONTINUE\" onclick=\"location.href='newManager.html';\" />";
+                page += "</form></body><footer id=\"footer\">Group 8</footer></html>";
+
+                res.send(page);
+            });
+        });
+    }
+    else res.redirect('/OperationNotValidPage.html');
+});
+
+app.post('/startChangePasswordManager', function(req, res)
+{
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function(db)
+        {
+            db.collection('ManagerTable').find({'Username': currentUsername}).toArray().then(function (feedbacks)
+            {
+                // get the code
+                var code = createRecoveryCode();
+
+                // set the code to expect
+                codeToExpect_ChangePassword = code;
+
+                // get the email address
+                var email = feedbacks[0].Email;
+
+                // send the code on email
+                var subject = "Verification Code for Change Password";
+                var mailContent = "We've detected that you are trying to change a password on your account.\n";
+                mailContent += "We've started a short verification process and we've sent you a verification code below.\n";
+                mailContent += "Here it is: " + code + ".\n";
+                mailContent += "\nIf you do not recognize this action, please reply to this email immediately.";
+
+                sendEmail(res, email, subject, mailContent);
+
+                // redirect to page
+                var page = "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta charset=\"utf-8\">";
+                page += "<title>Enter recovery code</title><link rel=\"stylesheet\" href=\"css/style.css\"></head>";
+
+                page += "<body><form class=\"box\" action=\"/checkVerificationCode_NewManager\" method=\"POST\">";
+
+                page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href=\'CodeResetPasswordPage.html\';\" />";
+                page += "<br>Enter the code you received on your email.<input type=\"password\" name=\"F_Code\">";
+                page += "<br><form>";
+                page += "<input type=\"submit\" class=\"button_active\" value=\"CONTINUE\" onclick=\"location.href='newManager.html';\" />";
+                page += "</form></body><footer id=\"footer\">Group 8</footer></html>";
+
+                res.send(page);
+            });
+        });
+    }
+    else res.redirect('/OperationNotValidPage.html');
+});
+
+app.post('/sendManagerCredentials', function (req, res){
+    if (currentUsername.length != 0)
+    {
+        // send notification email
         var mailContent = "You have been assigned as a new manager! Here are your new credentials:\n" + "Username: " + req.body.Username + "\n" + "Password: " + req.body.Password + "\n";
         var email = req.body.Email;
         var subject = 'New Manager Car Park Credentials';
+
         sendEmail(res, email, subject, mailContent);
 
-        transporter.sendMail(mailOptions, function(error, info){
-          if (!error)
-          {
-                dbConn.then(function (db)
-                {
-                    db.collection('ManagerTable').insertOne(req.body);
-                });
-                console.log('Email sent: ' + info.response);
-          }
+        // add new manager to the database
+        dbConn.then(function (db)
+        {
+            db.collection('ManagerTable').insertOne(req.body);
         });
-        res.redirect('/managerLanding.html');
+
+        // redirect
+        var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
+        page += "<title>Operation failed</title><link rel=\'stylesheet\' href=\'css/style.css\'>";
+        page += "</head><body><div class=\"box\"><form>";
+        page += "New manager added.<br>An email has been sent to the destination with the credentials you specified.";
+        page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"BACK TO LANDING\" onclick=\"location.href=\'managerLanding.html\';\" />";
+        page += "</form></div></body></html>";
+
+        res.send(page);
     }
     else res.redirect('/OperationNotValidPage.html');
 });
