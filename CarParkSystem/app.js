@@ -346,7 +346,6 @@ function createRecoveryCode()
     return password;
 }
 
-
 app.post('/sendManagerCodeResetPassword', function(req, res)
 {
     dbConn.then(function (db) {
@@ -739,6 +738,12 @@ app.post('/seeCarsChart', function(req, res)
 app.post('/seeTicketsChart', function(req, res)
 {
     checkManagerLoggedIn(res, '/numOfTicChart.html'); // if the user is logged in, jump to that page. otherwise, jump to the login page.
+});
+
+app.get('/getManualReport', function(req, res)
+{
+    if (currentUsername.length == 0) res.redirect('/OperationNotValidPage.html');
+    else res.redirect('/manualReport.html');
 });
 
 app.get('/tickets-sold', function (req, res) {
