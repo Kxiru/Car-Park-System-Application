@@ -10,11 +10,11 @@
     <body>
 
         <div class ="chart-box" >
-            <form class="box">
+            <form class="inner-chart-box">
             <canvas id="myChart" height="75%" width="75%"></canvas>
             <input type='submit' formaction='reportLanding.html' class='button_active' value='BACK TO LANDING'></input>
             </form>
-          </div>
+        </div>
 
       
 
@@ -30,8 +30,8 @@
         function ChartInitialise (datavalue){
 
             let myChart = document.getElementById('myChart').getContext('2d');
-            myChart.canvas.parentNode.style.height = '512px';
-            myChart.canvas.parentNode.style.width = '512px';
+            myChart.canvas.parentNode.style.height = '675px';
+            myChart.canvas.parentNode.style.width = '615px';
 
             let newChart = new Chart(myChart, {
                 type: 'bar',

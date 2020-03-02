@@ -54,9 +54,6 @@ html {
     overflow-x: auto;
     overflow-y: hidden;
     display: flex;
-    /* flex-wrap: wrap; */
-    /*white-space: nowrap;
-    direction: rtl; */
 }
 
 .grid-title h3 {
@@ -222,6 +219,7 @@ html {
     text-align: center;
 }
 
+
 .report-box {
     width: 100%;
     height: 35%;
@@ -380,7 +378,7 @@ input[type = "number"] {
 }
 
 
-.box input[type = "submit"], .report-box input[type = "submit"], .chart-box input[type = "submit"], .grid-sidebar input[type = "submit"] {
+.box input[type = "submit"], .gs-box input[type = "submit"], .report-box input[type = "submit"], .chart-box input[type = "submit"], .grid-sidebar input[type = "submit"] {
     border: 0;
     background: rgba(0,199,163,0.3);
     display: block;
@@ -389,7 +387,7 @@ input[type = "number"] {
     text-align: center;
     border: 2px solid #00c7a2;
     /* padding 14px 10px; */
-    width: 180px;
+    width: 160px;
     outline: none;
     color: white;
     border-radius: 24px;
@@ -431,7 +429,7 @@ input[type = "number"] {
     transition: 0.2s;
 }
 
-.box input[type = "submit"]:hover, .report-box input[type = "submit"]:hover, .chart-box input[type = "submit"]:hover, .response-box input[type = "submit"]:hover, .grid-sidebar input[type = "submit"]:hover {
+.box input[type = "submit"]:hover, .gs-box input[type = "submit"]:hover, .report-box input[type = "submit"]:hover, .chart-box input[type = "submit"]:hover, .response-box input[type = "submit"]:hover, .grid-sidebar input[type = "submit"]:hover {
     width: 180px;
     background: rgba(0,199,163,0.7);
 }
@@ -498,4 +496,20 @@ input[type = "number"] {
     border-radius: 24px;
     text-align: center;
 
+}
+
+.inner-chart-box {
+    min-width: 600px;
+    max-width: 1000px;
+    
+    min-height: 220px;
+    max-height: 1100px;
+    
+    position: absolute;
+    top: 47.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    border-radius: 24px;
+    text-align: center;
 }
