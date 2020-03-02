@@ -477,7 +477,17 @@ app.post('/forgotManagerCredentials', function(req, res)
 
                      res.send(page);
                 }
-                else res.redirect('/ErrorResetPassword.html');
+                else
+                {
+                    var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'><title>Correct Credentials</title>";
+                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                    page += "</head><body><div><form class=\"box\">";
+                    page += "Could not reset password. Please check your username and try again. <br>";
+                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to homepage\" onclick=\"location.href='Homepage.html';\" />";
+                    page += "</form></div></body></html>";
+
+                    res.send(page);
+                }
             });
         }
         else
