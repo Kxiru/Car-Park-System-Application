@@ -179,20 +179,24 @@ app.post('/post-tickets', function (req, res) {
 // res.send('Data received:\n' + JSON.stringify(req.body));
 
 
-app.get('/view-tickets', function (req, res) {
-    dbConn.then(function (db) {
-        db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
-            feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
-            "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
-            feedbackstring += "<h2>TICKET HISTORY</h2> <div class='scroll-box'>";
+app.get('/viewTicketEntries', function (req, res) {
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function (db) {
+            db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+                feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
+                "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
+                feedbackstring += "<h2>TICKET HISTORY</h2> <div class='scroll-box'>";
 
-            for (i = 0; i < feedbacks.length; i++) {
-                feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
-            }
-            feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
-            res.status(200).send(feedbackstring);
+                for (i = 0; i < feedbacks.length; i++) {
+                    feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
+                }
+                feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
+                res.status(200).send(feedbackstring);
+            });
         });
-    });
+    }
+    else res.redirect('/OperationNotValidPage.html');
 });
 
 /////////// Happy Hour POST and GET requests////////////////////
@@ -239,23 +243,27 @@ app.post('/post-happyhour', function(req, res)
             res.send(feedbackstring);
         }
     }
-    else res.redirect('/NotLoggedInChangePasswordAttempt.html');
+    else res.redirect('/OperationNotValidPage.html');
 });
 
-app.get('/view-hh', function (req, res) {
-    dbConn.then(function (db) {
-        db.collection('HappyHourTable').find({}).toArray().then(function (feedbacks) {
-            feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
-            "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
-            feedbackstring += "<h2>HAPPY HOUR LOG</h2> <div class='scroll-box'>";
+app.get('/viewHappyHourEntries', function (req, res) {
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function (db) {
+            db.collection('HappyHourTable').find({}).toArray().then(function (feedbacks) {
+                feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
+                "<img class='mainicon' src='css/images/historyicon.png' alt='logo'>";
+                feedbackstring += "<h2>HAPPY HOUR LOG</h2> <div class='scroll-box'>";
 
-            for (i = 0; i < feedbacks.length; i++) {
-                feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
-            }
-            feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
-            res.status(200).send(feedbackstring);
+                for (i = 0; i < feedbacks.length; i++) {
+                    feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
+                }
+                feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
+                res.status(200).send(feedbackstring);
+            });
         });
-    });
+    }
+    else res.redirect('/OperationNotValidPage.html');
 });
 
 /////////// Manager POST and GET requests////////////////////
@@ -338,7 +346,6 @@ function createRecoveryCode()
     return password;
 }
 
-
 app.post('/sendManagerCodeResetPassword', function(req, res)
 {
     dbConn.then(function (db) {
@@ -385,7 +392,16 @@ app.post('/sendManagerCodeResetPassword', function(req, res)
                 // redirect
                 res.redirect('/CodeResetPasswordPage.html');
             }
-            else res.redirect('/ErrorRecoveryCodePage.html');
+            else
+            {
+                var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'><title>Correct Credentials</title>";
+                page += "</head><body><div><form class=\"box\">";
+                page += "Invalid username. Could not process operation. <br>";
+                page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to homepage\" onclick=\"location.href='Homepage.html';\" />";
+                page += "</form></div></body></html>";
+
+                res.send(page);
+            }
         });
     });
 });
@@ -458,9 +474,27 @@ app.post('/forgotManagerCredentials', function(req, res)
                      codeToExpect = "";
 
                      // redirect
-                     res.redirect('/SuccessResetPassword.html');
+                     var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
+                     page += "<title>Password Recovery Successful</title>";
+                     page += "<link rel=\'stylesheet\' href=\'css/style.css\'></head>";
+                     page += "<body><div class=\"box\"><form>"
+                     page += "Password Successfully Reset. <br> Check your email and login to the manager dashboard. <br>";
+                     page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to Login\" onclick=\"location.href='managerlogin.html';\" />";
+                     page += "</form></div></body></html>";
+
+                     res.send(page);
                 }
-                else res.redirect('/ErrorResetPassword.html');
+                else
+                {
+                    var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'><title>Correct Credentials</title>";
+                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                    page += "</head><body><div><form class=\"box\">";
+                    page += "Could not reset password. Please check your username and try again. <br>";
+                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to homepage\" onclick=\"location.href='Homepage.html';\" />";
+                    page += "</form></div></body></html>";
+
+                    res.send(page);
+                }
             });
         }
         else
@@ -579,14 +613,48 @@ app.post('/changePasswordManager', function(req, res){
                     });
 
                     currentUsername = ""; // so that testers cannot jump to this page without the username set up
-                    res.redirect('/SuccessChangePassword.html');
+
+                    // redirect
+                    var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
+                    page += "<title>Password Change Successful</title>";
+                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                    page += "</head><body><div><form class=\"box\">";
+                    page += "Successful operation. <br> Please relogin with your new password.<br>";
+                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to Login\" onclick=\"location.href='managerlogin.html';\" />";
+                    page += "</form></div></body></html>";
+
+                    res.send(page);
                 }
-                else res.redirect('/ErrorChangePassword.html');
+                else
+                {
+                    // redirect to a page where you let the user know that the password change operation has failed
+                    var page = "<!DOCTYPE html><html lang=\"en\"><head>";
+                    page += "<meta charset=\'utf-8\'><title>Password Change Failed</title>";
+                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                    page += "</head><body><div class=\"box\"><form>";
+                    page += "Unsuccessful operation.<br>Try again.";
+                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Go Back\" onclick=\"location.href='changePasswordManager.html';\" />";
+                    page += "</form></div></body></html>";
+
+                    res.redirect(page);
+                }
             }
             catch(error)
             {
-                if (currentUsername.length != 0) res.redirect('/ErrorChangePassword');
-                else res.redirect('/NotLoggedInChangePasswordAttempt.html');
+                if (currentUsername.length != 0)
+                {
+                    // redirect to a page where you let the user know that the password change operation has failed
+                    var page = "<!DOCTYPE html><html lang=\"en\"><head>";
+                    page += "<meta charset=\'utf-8\'><title>Password Change Failed</title>";
+                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                    page += "</head><body><div class=\"box\"><form>";
+                    page += "Unsuccessful operation.<br>Try again.";
+                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Go Back\" onclick=\"location.href='changePasswordManager.html';\" />";
+                    page += "</form></div></body></html>";
+
+                    res.redirect(page);
+                }
+                else res.redirect('/OperationNotValidPage.html');
             }
         });
     });
@@ -631,23 +699,27 @@ app.post('/send-ManagerCr', function (req, res){
         });
         res.redirect('managerLanding.html');
     }
-    else res.redirect('/NotLoggedInChangePasswordAttempt.html');
+    else res.redirect('/OperationNotValidPage.html');
 });
 
-app.get('/view-manager', function (req, res) {
-    dbConn.then(function (db) {
-        db.collection('ManagerTable').find({}).toArray().then(function (feedbacks) {
+app.get('/viewManagerEntries', function (req, res) {
+    if (currentUsername.length != 0)
+    {
+        dbConn.then(function (db) {
+            db.collection('ManagerTable').find({}).toArray().then(function (feedbacks) {
 
-            feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
-            "<img class='mainicon' src='css/images/managericon.png' alt='logo'>";
-            feedbackstring += "<h2>MANAGERS TABLE</h2> <div class='scroll-box'>";
-            for (i = 0; i < feedbacks.length; i++) {
-                feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
-            }
-            feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
-            res.status(200).send(feedbackstring);
+                feedbackstring = CSSStyling + "<body> <div class='response-box' style='resize:vertical'>" +
+                "<img class='mainicon' src='css/images/managericon.png' alt='logo'>";
+                feedbackstring += "<h2>MANAGERS TABLE</h2> <div class='scroll-box'>";
+                for (i = 0; i < feedbacks.length; i++) {
+                    feedbackstring += JSON.stringify(feedbacks[i]) + "<hr>";
+                }
+                feedbackstring += "</div> <br> <form class='go-back-form'>" + backMLanding + "</form> </body>";
+                res.status(200).send(feedbackstring);
+            });
         });
-    });
+    }
+    else res.redirect('/OperationNotValidPage.html');
 });
 
 /////////// Chart GET request and draw chart////////////////////
@@ -655,7 +727,7 @@ app.get('/view-manager', function (req, res) {
 function checkManagerLoggedIn(res, link)
 {
     if (currentUsername.length != 0) res.redirect(link);
-    else res.redirect('NotLoggedInChangePasswordAttempt.html');
+    else res.redirect('OperationNotValidPage.html');
 }
 
 app.post('/seeCarsChart', function(req, res)
@@ -666,6 +738,12 @@ app.post('/seeCarsChart', function(req, res)
 app.post('/seeTicketsChart', function(req, res)
 {
     checkManagerLoggedIn(res, '/numOfTicChart.html'); // if the user is logged in, jump to that page. otherwise, jump to the login page.
+});
+
+app.get('/getManualReport', function(req, res)
+{
+    if (currentUsername.length == 0) res.redirect('/OperationNotValidPage.html');
+    else res.redirect('/manualReport.html');
 });
 
 app.get('/tickets-sold', function (req, res) {

@@ -31,19 +31,17 @@
         </div>
 
         <div class="grid-content-a">
-            <br>
-            <img class="dashboard-img" src="css/images/reporticon.png" alt="logo">
-            <br>
-
+            <br> <img class="dashboard-img" src="css/images/reporticon.png" alt="logo"> <br>
             <input type="button" name="" value="GET REPORT" onclick="location.href= 'reportLanding.html';">
-            <form class="report-box" action="/manualReport.html" method="GET">
+            
+            <form class="report-box" action="/getManualReport" method="GET">
                 CHOOSE REPORT TIME SLOT: <br>
                 <input type="date" name="date">
                 <br>
                 <pre>FROM:             UNTIL:</pre>
                 <input type="time" name="startTime">
                 <input type="time" name="endTime"><br>
-                <input type="submit" name="" value="GENERATE REPORT" >
+                <input type="submit" name="" value="GENERATE REPORT" onclick="location.href='manualReport.html';">
             </form>
              <form action="/checkLoggedin" method="POST">
                 <input type="button" name="" value="NEW MANAGER" onclick="location.href= 'newManager.html';">
@@ -51,16 +49,13 @@
         </div>
         
         <div class="grid-content-b">
-            <br>
-            <img class="dashboard-img" src="css/images/charticon.png" alt="logo">
-            <br>
 
-            <input type="button"  value="VIEW TICKET ENTRIES" onclick="location.href='/view-tickets';" />
-            <br>
-            <input type="button"  value="VIEW MANAGERS" onclick="location.href='/view-manager';" />
-            <br>
-            <input type="button"  value="VIEW HAPPY HOUR LOG" onclick="location.href='/view-hh';" />
-            <br>
+            <br> <img class="dashboard-img" src="css/images/charticon.png" alt="logo"> <br>
+
+            <input type="button"  value="VIEW TICKET ENTRIES" onclick="location.href='/viewTicketEntries';" /> <br>
+            <input type="button"  value="VIEW MANAGERS" onclick="location.href='/viewManagerEntries';" /> <br>
+            <input type="button"  value="VIEW HAPPY HOUR LOG" onclick="location.href='/viewHappyHourEntries';" /> <br>
+
         </div>
 
         <br>
