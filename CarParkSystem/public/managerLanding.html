@@ -38,13 +38,19 @@
                 CHOOSE REPORT TIME SLOT: <br>
                 <input type="date" name="date">
                 <br>
-                <pre>FROM:             UNTIL:</pre>
-                <input type="time" name="startTime">
-                <input type="time" name="endTime"><br>
-                <input type="submit" name="" value="GENERATE REPORT" onclick="location.href='manualReport.html';">
-            </form>
-             <form action="/checkLoggedin" method="POST">
-                <input type="button" name="" value="NEW MANAGER" onclick="location.href= 'newManager.html';">
+
+                <div class = "time-container">
+                    <div class="time-box">
+                        FROM:
+                        <input type="time" name="startTime">
+                    </div>
+                    <div class="time-box">
+                        UNTIL:
+                        <input type="time" name="endTime">
+                    </div>
+                </div>
+                <input type="submit" name="" value="GENERATE REPORT" >
+
             </form>
         </div>
         
@@ -64,6 +70,7 @@
     <footer id="footer">
         Group 8
     </footer>
+
 </body>
 
 </html>

@@ -765,62 +765,70 @@ app.get('/insidecarpark', function (req, res) {
 });
 
 app.get('/manual-report', function (req, res) {
-    if (currentUsername.length != 0)
-    {
+    if (currentUsername.length != 0) {
+
         console.log(req.query)
-        let startReport = new Date(req.query.date +" " + req.query.startTime)
-        let endReport = new Date(req.query.date +" " + req.query.endTime)
-        let timediff = endReport.getHours() - startReport.getHours() +1
-        dbConn.then(function (db) {
-            db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
-                var custoIn = new Array(timediff).fill(0)
-                var residIn = new Array(timediff).fill(0)
-                var emploIn = new Array(timediff).fill(0)
+        let startReport = new Date(req.query.date + " " + req.query.startTime);
+        let endReport = new Date(req.query.date + " " + req.query.endTime);
+        let timediff = endReport.getHours() - startReport.getHours() + 1;
+
+        console.log(startReport.getHours() > endReport.getHours());
+
+        if (startReport.getHours() > endReport.getHours()) {
+            res.redirect('/managerLanding.html');
+            console.log("accessed");
+        } else {
+            dbConn.then(function (db) {
+                db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {
+                    var custoIn = new Array(timediff).fill(0);
+                    var residIn = new Array(timediff).fill(0);
+                    var emploIn = new Array(timediff).fill(0);
 
 
-                feedbacks.forEach(function (arrayItem) {
-                    // console.log(arrayItem)
-                    let customer = false;
-                    let resident = false;
-                    let employee = false;
-                    for (const [key, value] of Object.entries(arrayItem)) {
-                        if (key == "ticketType") {
-                            if (value == "Customer") {
-                                customer = true;
-                            } else if (value == "Resident") {
-                                resident = true;
-                            } else if (value == "Employee") {
-                                employee = true;
+                    feedbacks.forEach(function (arrayItem) {
+                        // console.log(arrayItem)
+                        let customer = false;
+                        let resident = false;
+                        let employee = false;
+                        for (const [key, value] of Object.entries(arrayItem)) {
+                            if (key == "ticketType") {
+                                if (value == "Customer") {
+                                    customer = true;
+                                } else if (value == "Resident") {
+                                    resident = true;
+                                } else if (value == "Employee") {
+                                    employee = true;
+                                }
                             }
-                        }
-                        if (key == "timeIn") {
-                            let currentvalue = new Date(value);
+                            if (key == "timeIn") {
+                                let currentvalue = new Date(value);
 
-                            // currentvalue.setTime(value)
-                            if (currentvalue.getDate() == startReport.getDate() && currentvalue.getMonth() == startReport.getMonth()) {
+                                // currentvalue.setTime(value)
+                                if (currentvalue.getDate() == startReport.getDate() && currentvalue.getMonth() == startReport.getMonth()) {
 
-                                if (currentvalue.getHours() >= startReport.getHours() && currentvalue.getHours() <= endReport.getHours()) {
+                                    if (currentvalue.getHours() >= startReport.getHours() && currentvalue.getHours() <= endReport.getHours()) {
 
-                                    if (customer == true){
-                                        custoIn[currentvalue.getHours() - startReport.getHours()] +=1
-                                    } else if (resident == true) {
-                                        residIn[currentvalue.getHours() - startReport.getHours()] += 1
-                                    } else if (employee == true) {
-                                        emploIn[currentvalue.getHours() - startReport.getHours()] += 1
+                                        if (customer == true) {
+                                            custoIn[currentvalue.getHours() - startReport.getHours()] += 1
+                                        } else if (resident == true) {
+                                            residIn[currentvalue.getHours() - startReport.getHours()] += 1
+                                        } else if (employee == true) {
+                                            emploIn[currentvalue.getHours() - startReport.getHours()] += 1
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                });
+                    });
 
-                let timings = []
-                for (let i = startReport.getHours(); i <= endReport.getHours(); i++) {
-                    timings[i - startReport.getHours()] = (i + ":00")
-                }
-                res.send({custoIn, residIn, emploIn, timings})
+                    let timings = []
+                    for (let i = startReport.getHours(); i <= endReport.getHours(); i++) {
+                        timings[i - startReport.getHours()] = (i + ":00")
+                    }
+                    res.send({custoIn, residIn, emploIn, timings})
+                });
             });
-        });
+        }
     }
     else res.redirect('/OperationNotValidPage.html'); // to prevent users who are not logged in to access this information
 });
