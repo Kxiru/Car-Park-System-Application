@@ -19,7 +19,7 @@ var datetime = currentdate.getDate() + "/"
 
 const backHome = "<input type='submit' formaction='Homepage.html' class='button_active' value='Back to Home'></input>";
 const backMLanding = "<input type='submit' formaction='managerLanding.html' class='button_active' value='BACK TO LANDING'></input>";
-const CSSStyling = "<head> <meta charset='utf-8'> <title>Receipt</title> <link rel='stylesheet' href='css/style.css'> </head>";
+const CSSStyling = "<head> <meta charset='utf-8'> <title>Entry Details</title> <link rel='stylesheet' href='css/style.css'> </head>";
 
 var dbConn = mongodb.MongoClient.connect("mongodb://Admin:admin123@cs1813namedb-shard-00-00-maax9.mongodb.net:27017,cs1813namedb-shard-00-01-maax9.mongodb.net:27017,cs1813namedb-shard-00-02-maax9.mongodb.net:27017/test?ssl=true&replicaSet=CS1813NameDB-shard-0&authSource=admin&retryWrites=true&w=majority/CarParkDatabase");
 
