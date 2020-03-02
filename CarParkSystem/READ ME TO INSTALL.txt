@@ -7,6 +7,7 @@ The Default Manager Login Credentials are: -------------------
 Username: tester
 Password: tester123
 If asked, your email address is: cs1813_tester@mailinator.com
+Employee Discount code: 200117
 
 We encourage you to create a new manager for safety reasons.
 
@@ -15,6 +16,8 @@ We encourage you to create a new manager for safety reasons.
 INSTALLATION--------------------------------------------------
 1) Please Un-zip the file into your local drive.
 2) In your favourite terminal such as cmd, Powershell, or the linux command line, navigate to the file and open the CarParkSystem folder.
-3) Within this folder, type the command 'npm install'. This will install all of the dependencies necesary for the application to run.
-4) Once installed, type 'node app.js'. This will open up the server.
-5) Please go to "localhost:3000" in your favourite browser where you will be redirected to the homepage.
+3) In order for the program to run, you need to install npm and node. If you've already got them installed, you can skip till step number 6
+4) If you are running on linux, then run "sudo apt-get install npm" and you should have both npm and node installed.
+5) If you are running on windows, check this link for installing npm and node: https://phoenixnap.com/kb/install-node-js-npm-on-windows
+6) Once you have npm and node installed, you should be able to run the program. Just type in "node app.js" and you've successfully connected to the server.
+7) To see the program running, open any favourite browser and type "localhost:3000" and you're good to go!

@@ -80,7 +80,12 @@ app.post('/verifyTicketID', function (req, res) {
 
                     //Formatting for receipt generation
                     receipt += "<br>You signed in at: " + feedbacks[0].formattedTimeIn + ". </br>You signed out at: " + datetime + (".<br>");
+                    if(feedbacks[0].ticketType == "Resident"){
 
+                        receipt += "<br>Thank you for staying at CarParks' Car Parks, Resident!<br>";
+                        receipt += "<br>Enjoy your stay for free!<br>";
+                        
+                    }else{
                     //Receipt completion and payment...
                     receipt += "<br><hr>You spent " + hoursSpentIn.toFixed(2) + " hours in the car park.";
                     receipt += "<br> At a rate of £" + parkRate + " per hour, you have £<b>" + stayPrice + "</b> to pay.";
@@ -90,6 +95,8 @@ app.post('/verifyTicketID', function (req, res) {
 
                     pricelink = "<input type='submit' formaction='http://www.paypal.me/nkeirukaw/" + stayPrice + "' class='button_active' value='Click here to Pay Now'></input>";
                     receipt += "<br><hr>" + pricelink;
+                    
+                    };
                     receipt += backHome;
                     receipt += "</div></form>";
                     res.send(receipt);
