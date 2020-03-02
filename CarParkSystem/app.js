@@ -626,8 +626,9 @@ app.post('/changePasswordManager', function(req, res){
     });
 });
 
-app.post('/checkLoggedin', function(req, res)
+app.post('/startNewManagerProcess', function(req, res)
 {
+    console.log('Jeff');
     checkManagerLoggedIn(res, '/newManager.html');
 });
 
