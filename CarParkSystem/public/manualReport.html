@@ -13,19 +13,21 @@
       </div>
 
       <script>
+
         var search = window.location.search;
         var queryparam = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}', function(key, value) { return key===""?value:decodeURIComponent(value) })
 
-        fetch('/manual-report/'+ search).then(function(response){
+        fetch('/manual-report/' + search).then(function (response) {
             return response.json();
-            }).then(function (data) {
-                console.log('MY ARRAY', data);
-                custoIn = data.custoIn;
-                residIn = data.residIn;
-                emploIn = data.emploIn;
-                timings = data.timings;
-                ChartInitialise(custoIn, residIn, emploIn, timings)
-            })
+        }).then(function (data) {
+            console.log('MY ARRAY', data);
+            custoIn = data.custoIn;
+            residIn = data.residIn;
+            emploIn = data.emploIn;
+            timings = data.timings;
+            ChartInitialise(custoIn, residIn, emploIn, timings)
+        })
+        //}
 
         function ChartInitialise (custoIn, residIn, emploIn, timings){
 
