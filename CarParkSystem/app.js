@@ -239,7 +239,7 @@ app.post('/post-happyhour', function(req, res)
             res.send(feedbackstring);
         }
     }
-    else res.redirect('/NotLoggedInChangePasswordAttempt.html');
+    else res.redirect('/OperationNotValidPage.html');
 });
 
 app.get('/view-hh', function (req, res) {
@@ -587,14 +587,24 @@ app.post('/changePasswordManager', function(req, res){
                     });
 
                     currentUsername = ""; // so that testers cannot jump to this page without the username set up
-                    res.redirect('/SuccessChangePassword.html');
+
+                    // redirect
+                    var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
+                    page += "<title>Password Change Successful</title>";
+                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                    page += "</head><body><div><form class=\"box\">";
+                    page += "Successful operation. <br> Please relogin with your new password.<br>";
+                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to Login\" onclick=\"location.href='managerlogin.html';\" />";
+                    page += "</form></div></body></html>";
+
+                    res.send(page);
                 }
                 else res.redirect('/ErrorChangePassword.html');
             }
             catch(error)
             {
                 if (currentUsername.length != 0) res.redirect('/ErrorChangePassword');
-                else res.redirect('/NotLoggedInChangePasswordAttempt.html');
+                else res.redirect('/OperationNotValidPage.html');
             }
         });
     });
@@ -639,7 +649,7 @@ app.post('/send-ManagerCr', function (req, res){
         });
         res.redirect('managerLanding.html');
     }
-    else res.redirect('/NotLoggedInChangePasswordAttempt.html');
+    else res.redirect('/OperationNotValidPage.html');
 });
 
 app.get('/view-manager', function (req, res) {
@@ -663,7 +673,7 @@ app.get('/view-manager', function (req, res) {
 function checkManagerLoggedIn(res, link)
 {
     if (currentUsername.length != 0) res.redirect(link);
-    else res.redirect('NotLoggedInChangePasswordAttempt.html');
+    else res.redirect('OperationNotValidPage.html');
 }
 
 app.post('/seeCarsChart', function(req, res)
