@@ -728,7 +728,7 @@ app.post('/startChangePasswordManager', function(req, res)
                 page += "<title>Enter recovery code</title><link rel=\"stylesheet\" href=\"css/style.css\"></head>";
 
                 page += "<body><form class=\"box\" action=\"/checkVerificationCode_NewManager\" method=\"POST\">";
-                
+
                 page += "<input type=\"button\" class=\"button_active\" value=\"GO BACK\" onclick=\"location.href=\'CodeResetPasswordPage.html\';\" />";
                 page += "<br>Enter the code you received on your email.<input type=\"password\" name=\"F_Code\">";
                 page += "<br><form>";
