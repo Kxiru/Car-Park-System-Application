@@ -458,7 +458,15 @@ app.post('/forgotManagerCredentials', function(req, res)
                      codeToExpect = "";
 
                      // redirect
-                     res.redirect('/SuccessResetPassword.html');
+                     var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
+                     page += "<title>Password Recovery Successful</title>";
+                     page += "<link rel=\'stylesheet\' href=\'css/style.css\'></head>";
+                     page += "<body><div class=\"box\"><form>"
+                     page += "Password Successfully Reset. <br> Check your email and login to the manager dashboard. <br>";
+                     page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to Login\" onclick=\"location.href='managerlogin.html';\" />";
+                     page += "</form></div></body></html>";
+
+                     res.send(page);
                 }
                 else res.redirect('/ErrorResetPassword.html');
             });
