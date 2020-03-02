@@ -101,6 +101,32 @@ app.post('/verifyTicketID', function (req, res) {
     })();
 });
 
+function sendEmail(res, address, subj, content)
+{
+    let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth:
+    {
+        user: 'carparksystem.cs1813@gmail.com',
+        pass: 'snapchat'
+    }});
+
+    var mailContent = content;
+    let mailOptions = {
+    from: 'carparksystem.cs1813@gmail.com',
+    to: address,
+    subject: subj,
+    text: mailContent
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (!error) console.log('Email sent: ' + info.response);
+});
+}
+
 async function addTicket(req,res) {
     let db = await dbConn;
     let count = await db.collection('TicketsTable').count();
@@ -362,32 +388,12 @@ app.post('/sendManagerCodeResetPassword', function(req, res)
                 inResetProcess = true; // this means that the user has started the recovery process. He cannot undo this. He has to complete the process if he wants to log in with the same username.
 
                 // send it to the user's email address
-                let transporter = nodemailer.createTransport({
-                        host: 'smtp.gmail.com',
-                        port: 587,
-                        secure: false,
-                        requireTLS: true,
-                        auth: {
-                            user: 'carparksystem.cs1813@gmail.com',
-                            pass: 'snapchat'
-                        }
-                        });
+                var mailContent = "";
+                mailContent = "We've detected that you've tried to reset your password.\n"
+                mailContent += "In order for your password to be reset, we need to check if it really is you. Therefore, you need a recovery code to move forward.\n";
+                mailContent += "Here is your recovery code: " + code + ". ";
 
-                        var mailContent = "";
-                        mailContent = "We've detected that you've tried to reset your password.\n"
-                        mailContent += "In order for your password to be reset, we need to check if it really is you. Therefore, you need a recovery code to move forward.\n";
-                        mailContent += "Here is your recovery code: " + code + ". ";
-                        let mailOptions = {
-                        from: 'carparksystem.cs1813@gmail.com',
-                        to: email,
-                        subject: 'Reset Password Action Detected',
-                        text: mailContent
-                        };
-
-                        transporter.sendMail(mailOptions, function(error, info){
-                          if (!error) console.log('Email sent: ' + info.response);
-                    });
-
+                sendEmail(res, email, 'Reset Password Action Detected', mailContent);
 
                 // redirect
                 res.redirect('/CodeResetPasswordPage.html');
@@ -441,32 +447,11 @@ app.post('/forgotManagerCredentials', function(req, res)
                         );
 
                     // send email to user
-
-                    let transporter = nodemailer.createTransport({
-                            host: 'smtp.gmail.com',
-                            port: 587,
-                            secure: false,
-                            requireTLS: true,
-                            auth: {
-                                user: 'carparksystem.cs1813@gmail.com',
-                                pass: 'snapchat'
-                            }
-                            });
-
-                            var mailContent = "";
-                            mailContent = "We've detected that you've tried to reset your password.\n"
-                            mailContent += "You can enter this password into the login page and change it afterwards.\n";
-                            mailContent += "Here is your new password: " + newPass + ". ";
-                            let mailOptions = {
-                            from: 'carparksystem.cs1813@gmail.com',
-                            to: email,
-                            subject: 'Reset Password Action Detected',
-                            text: mailContent
-                            };
-
-                            transporter.sendMail(mailOptions, function(error, info){
-                              if (!error) console.log('Email sent: ' + info.response);
-                        });
+                    var mailContent = "";
+                    mailContent = "We've detected that you've tried to reset your password.\n"
+                    mailContent += "You can enter this password into the login page and change it afterwards.\n";
+                    mailContent += "Here is your new password: " + newPass + ". ";
+                    sendEmail(res, email, 'Reset Password Action Detected', mailContent);
 
                      // reset the variables for the reset password process
                      inResetProcess = false;
@@ -589,28 +574,9 @@ app.post('/changePasswordManager', function(req, res){
                     );
 
                     // send email as notification
-                    let transporter = nodemailer.createTransport({
-                        host: 'smtp.gmail.com',
-                        port: 587,
-                        secure: false,
-                        requireTLS: true,
-                        auth: {
-                            user: 'carparksystem.cs1813@gmail.com',
-                            pass: 'snapchat'
-                        }
-                        });
-
-                        var mailContent = "Somebody has changed a password for the following user: " + currentUsername + " . \n If you recognize this action, you can leave this email alone. If not, please let us know by sending a reply to this email.";
-                        let mailOptions = {
-                        from: 'carparksystem.cs1813@gmail.com',
-                        to: email,
-                        subject: 'Change Password Action Detected',
-                        text: mailContent
-                        };
-
-                        transporter.sendMail(mailOptions, function(error, info){
-                          if (!error) console.log('Email sent: ' + info.response);
-                    });
+                    var mailContent = "We've detected that you've tried to reset your password.\nIf you recognize this action, you can leave this email alone. Otherwise, please reply to this email and let us know.";
+                    var subject = 'Reset Password Action Detected';
+                    sendEmail(res, email, subject, mailContent);
 
                     currentUsername = ""; // so that testers cannot jump to this page without the username set up
 
@@ -668,24 +634,10 @@ app.post('/checkLoggedin', function(req, res)
 app.post('/send-ManagerCr', function (req, res){
     if (currentUsername.length != 0)
     {
-        let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        requireTLS: true,
-        auth: {
-            user: 'carparksystem.cs1813@gmail.com',
-            pass: 'snapchat'
-        }
-        });
-
         var mailContent = "You have been assigned as a new manager! Here are your new credentials:\n" + "Username: " + req.body.Username + "\n" + "Password: " + req.body.Password + "\n";
-        let mailOptions = {
-        from: 'carparksystem.cs1813@gmail.com',
-        to: req.body.Email,
-        subject: 'New Manager Car Park Credentials',
-        text: mailContent
-        };
+        var email = req.body.Email;
+        var subject = 'New Manager Car Park Credentials';
+        sendEmail(res, email, subject, mailContent);
 
         transporter.sendMail(mailOptions, function(error, info){
           if (!error)
@@ -697,7 +649,7 @@ app.post('/send-ManagerCr', function (req, res){
                 console.log('Email sent: ' + info.response);
           }
         });
-        res.redirect('managerLanding.html');
+        res.redirect('/managerLanding.html');
     }
     else res.redirect('/OperationNotValidPage.html');
 });
@@ -742,8 +694,7 @@ app.post('/seeTicketsChart', function(req, res)
 
 app.get('/getManualReport', function(req, res)
 {
-    if (currentUsername.length == 0) res.redirect('/OperationNotValidPage.html');
-    else res.redirect('/manualReport.html');
+    checkManagerLoggedIn(res, '/manualReport.html');
 });
 
 app.get('/tickets-sold', function (req, res) {
@@ -813,8 +764,6 @@ app.get('/insidecarpark', function (req, res) {
     });
 });
 
-
-
 app.get('/manual-report', function (req, res) {
     if (currentUsername.length != 0)
     {
@@ -873,7 +822,7 @@ app.get('/manual-report', function (req, res) {
             });
         });
     }
-    else res.redirect('/NitLoggedInChangePasswordAttempt.html'); // to prevent users who are not logged in to access this information
+    else res.redirect('/OperationNotValidPage.html'); // to prevent users who are not logged in to access this information
 });
 
 app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');
