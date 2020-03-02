@@ -57,28 +57,27 @@ html {
 }
 
 .title-buttons {
-    width: 100%;
-
+    position: relative;
+    max-width: 75%;
+    min-width: 55%;
+    height: 85%;
+    margin: 5px;
+    
+    left: 20%;
+    outline: 1px solid #00c7a2;
 }
 
 .grid-title h3 {
-    position: absolute;
+    position: relative;
     left: 15%;
     top: 0.5%;
+    display: inline-block;
 }
 
-.grid-title input[name="changepass"] {
-    position: absolute;
-    right: 20%;
-    float: right;
-    clear: both;
-}
-
-.grid-title input[name="logout"] {
-    position: absolute;
-    right: 5%;
-    float: right;
-    clear: both;
+.title-buttons input[class="button_active"] {
+    position: relative;
+    display: inline-block;
+    /* width: 100%; */
 }
 
 .grid-sidebar {
