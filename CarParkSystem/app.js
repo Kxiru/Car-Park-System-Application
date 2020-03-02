@@ -493,7 +493,18 @@ function Login(req, res)
                     currentUsername = req.body.name;
                     res.redirect('/managerLanding.html');
                 }
-                else res.redirect('/WrongManagerCredentials.html');
+                else
+                {
+                    var page = "<!DOCTYPE html><html lang=\"en\"><head>";
+                    page += "<meta charset=\'utf-8\'><title>Manager Login Failed</title>";
+                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                    page += "</head><body><div class=\"box\">";
+                    page += "<form>Incorrect Credentials. <br>Try again. <br>";
+                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Back to Login\" onclick=\"location.href='managerlogin.html';\" />";
+                    page += "</form></div></body></html>";
+
+                    res.send(page);
+                }
 
             });
         });
