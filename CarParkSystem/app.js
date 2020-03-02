@@ -589,6 +589,22 @@ app.get('/view-manager', function (req, res) {
 
 /////////// Chart GET request and draw chart////////////////////
 
+function checkManagerLoggedIn(res, link)
+{
+    if (currentUsername.length != 0) res.redirect(link);
+    else res.redirect('NotLoggedInChangePasswordAttempt.html');
+}
+
+app.post('/seeCarsChart', function(req, res)
+{
+    checkManagerLoggedIn(res, '/carsInside.html'); // if the user is logged in, jump to that page. otherwise, jump to the login page.
+});
+
+app.post('/seeTicketsChart', function(req, res)
+{
+    checkManagerLoggedIn(res, '/numOfTicChart.html'); // if the user is logged in, jump to that page. otherwise, jump to the login page.
+});
+
 app.get('/tickets-sold', function (req, res) {
     dbConn.then(function (db) {
         db.collection('TicketsTable').find({}).toArray().then(function (feedbacks) {

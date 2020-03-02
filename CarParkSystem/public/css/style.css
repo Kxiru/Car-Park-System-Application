@@ -466,6 +466,26 @@ input[type = "number"] {
     background: rgba(0,199,163,0.7);
 }
 
+.menu-box input[type = "submit"]:hover, .grid-sidebar input[type = "submit"]:hover {
+    border: 0;
+    background: rgba(0,199,163,0.3);
+    display: block;
+    margin: 20px auto;
+    font-size: 15px;
+    text-align: center;
+    border: 2px solid #00c7a2;
+    width: 180px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.2s;
+}
+
+.menu-box input[type = "submit"]:hover {
+    width: 180px;
+    background: rgba(0,199,163,0.7);
+}
+
 .box input[type = "button"], .grid-title input[type = "button"], .grid-content-b input[type = "button"], .grid-sidebar input[type = "button"] {
     border: 0;
     background: rgba(145,188,201,0.3);
