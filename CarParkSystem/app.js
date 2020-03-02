@@ -463,7 +463,18 @@ app.post('/forgotManagerCredentials', function(req, res)
                 else res.redirect('/ErrorResetPassword.html');
             });
         }
-        else res.redirect('/NotInRecoveryPasswordPage.html'); // this means that the user tries to redirect to a wrong page.
+        else
+         {
+            // this means that the user tries to redirect to a wrong page.
+            var page = "<!DOCTYPE html><html lang=\"" + "en" + "\"><head>";
+            page += "<meta charset=\'utf-8\'><title>Operation not valid</title>";
+            page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+            page += "</head><body><div class=\"box\"><form>";
+            page += "Operation not valid.<br>";
+            page += "</form></div></body></html>";
+
+            res.send(page);
+         }
     });
 
 });
