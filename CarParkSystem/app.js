@@ -599,11 +599,35 @@ app.post('/changePasswordManager', function(req, res){
 
                     res.send(page);
                 }
-                else res.redirect('/ErrorChangePassword.html');
+                else
+                {
+                    // redirect to a page where you let the user know that the password change operation has failed
+                    var page = "<!DOCTYPE html><html lang=\"en\"><head>";
+                    page += "<meta charset=\'utf-8\'><title>Password Change Failed</title>";
+                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                    page += "</head><body><div class=\"box\"><form>";
+                    page += "Unsuccessful operation.<br>Try again.";
+                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Go Back\" onclick=\"location.href='changePasswordManager.html';\" />";
+                    page += "</form></div></body></html>";
+
+                    res.redirect(page);
+                }
             }
             catch(error)
             {
-                if (currentUsername.length != 0) res.redirect('/ErrorChangePassword');
+                if (currentUsername.length != 0)
+                {
+                    // redirect to a page where you let the user know that the password change operation has failed
+                    var page = "<!DOCTYPE html><html lang=\"en\"><head>";
+                    page += "<meta charset=\'utf-8\'><title>Password Change Failed</title>";
+                    page += "<link rel=\'stylesheet\' href=\'css/style.css\'>";
+                    page += "</head><body><div class=\"box\"><form>";
+                    page += "Unsuccessful operation.<br>Try again.";
+                    page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"Go Back\" onclick=\"location.href='changePasswordManager.html';\" />";
+                    page += "</form></div></body></html>";
+
+                    res.redirect(page);
+                }
                 else res.redirect('/OperationNotValidPage.html');
             }
         });
