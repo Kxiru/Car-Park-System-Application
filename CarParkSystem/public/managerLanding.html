@@ -34,7 +34,7 @@
             <br> <img class="dashboard-img" src="css/images/reporticon.png" alt="logo"> <br>
             <input type="button" name="" value="GET REPORT" onclick="location.href= 'reportLanding.html';">
             
-            <form class="report-box" action="/manualReport.html" method="GET">
+            <form name= "reportcheck" class="report-box" action="/manualReport.html" onsubmit="return validateForm()" method="GET">
                 CHOOSE REPORT TIME SLOT: <br>
                 <input type="date" name="date">
                 <br>
@@ -53,7 +53,21 @@
 
             </form>
         </div>
-        
+        <script>
+            function validateForm(){
+                var date  = document.forms["reportcheck"]["date"].value;
+                var start = document.forms["reportcheck"]["startTime"].value;
+                var end = document.forms["reportcheck"]["endTime"].value;
+                let startReport = new Date(date + " " + start);
+                let endReport = new Date(date + " " + end);
+
+                if (startReport.getHours() > endReport.getHours()){
+                    alert("Please enter a valid range of timings");
+                    window.location.href = "/managerLanding.html"
+                    return false;
+                }
+            }
+        </script>
         <div class="grid-content-b">
 
             <br> <img class="dashboard-img" src="css/images/charticon.png" alt="logo"> <br>
