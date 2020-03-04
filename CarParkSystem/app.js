@@ -67,6 +67,8 @@ app.post('/verifyTicketID', function (req, res) {
                     const hoursSpentIn = secondsSpentIn / 3600;
                     let stayPrice = (hoursSpentIn * parkRate).toFixed(2);
                     const employeeDiscount = 0.5;
+                    let stayPrice = hoursSpentIn * parkRate;
+                    const employeeDiscount = 0.7;
                     
                     receipt = CSSStyling + "<div class='box'><form>";
                     receipt += "<h2>Thank you for staying in the Car Park.</h2>"
@@ -75,7 +77,8 @@ app.post('/verifyTicketID', function (req, res) {
                     if(feedbacks[0].ticketType == "Employee"){
 
                         receipt += "<br>As an Employee, please enjoy a 50% discount on your stay. You would have paid: £<b>" + stayPrice + "</b><br>";
-                        stayPrice = stayPrice * employeeDiscount;
+                        stayPrice = (stayPrice * employeeDiscount).toFixed(2);
+
                     }
 
                     //Formatting for receipt generation
