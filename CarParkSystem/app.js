@@ -774,7 +774,7 @@ app.post('/sendManagerCredentials', function (req, res){
 
             // redirect
             var page = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\'utf-8\'>";
-            page += "<title>Operation failed</title><link rel=\'stylesheet\' href=\'css/style.css\'>";
+            page += "<title>Operation successful</title><link rel=\'stylesheet\' href=\'css/style.css\'>";
             page += "</head><body><div class=\"box\"><form>";
             page += "New manager added.<br>An email has been sent to the destination with the credentials you specified.";
             page += "<input type=\"button\" name=\"logout\" class=\"button_active\" value=\"BACK TO LANDING\" onclick=\"location.href=\'managerLanding.html\';\" />";
