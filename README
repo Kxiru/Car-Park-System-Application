@@ -7,12 +7,13 @@ The Default Manager Login Credentials are: -------------------
 Username: tester
 Password: tester123
 If asked, your email address is: cs1813_tester@mailinator.com
+
 Employee Discount code: 200117
 
 We encourage you to create a new manager for safety reasons.
 
 INSTALLATION--------------------------------------------------
-1) Please Un-zip the file into your local drive.
+1) Please Download the 'CarParkSystem' folder into your local drive.
 2) In your favourite terminal such as cmd, Powershell, or the linux command line, navigate to the file and open the CarParkSystem folder.
 3) In order for the program to run, you need to install npm and node. If you've already got them installed, please skip to step number 6
 4) If you are running on linux, then run "sudo apt-get install npm" and you should have both npm and node installed.
@@ -25,7 +26,7 @@ INSTALLATION--------------------------------------------------
 
 What can the system do?---------------------------------------
 1) Register users to the database
-2) Buy car park tickets
+2) Buy car park tickets depending on your user permissions (Eg; employees have discounted car park tickets, where discounts are automatically applied).
 3) Generate report data and graphs on the amount of cars in the car park
 4) Expire car park tickets
 5) Log in with different access levels
